@@ -2,8 +2,12 @@ import { createElement } from '../render.js';
 import { createRoutePointTemplate } from '../templates/route-point-template.js';
 
 export default class RoutePointView {
+  constructor ({data}) {
+    this.point = data;
+  }
+
   getTemplate() {
-    return createRoutePointTemplate();
+    return createRoutePointTemplate(this.point);
   }
 
   getElement() {
