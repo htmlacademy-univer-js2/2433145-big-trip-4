@@ -12,8 +12,4 @@ export default class FilterFormView {
     }
     return this.element;
   }
-
-  removeElement() {
-    this.element = null;
-  }
 }
