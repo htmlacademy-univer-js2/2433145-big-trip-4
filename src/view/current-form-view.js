@@ -1,23 +1,15 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { createCurrentFormTemplate } from '../templates/current-form-template.js';
 
-export default class CurrentFormView {
+export default class CurrentFormView extends AbstractView{
+  #point = null;
+
   constructor ({point}) {
-    this.point = point;
+	super();
+    this.#point = point;
   }
 
-  getTemplate() {
+  get template() {
     return createCurrentFormTemplate(this.point);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

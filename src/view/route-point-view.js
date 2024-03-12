@@ -1,23 +1,13 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { createRoutePointTemplate } from '../templates/route-point-template.js';
 
-export default class RoutePointView {
+export default class RoutePointView extends AbstractView{
+  #point = null;
   constructor ({data}) {
-    this.point = data;
+    this.#point = data;
   }
 
-  getTemplate() {
+  get template() {
     return createRoutePointTemplate(this.point);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
