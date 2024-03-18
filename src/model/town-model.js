@@ -2,10 +2,10 @@ import {getRandomTown} from '../mock/town.js';
 import {TOWN_COUNTS} from '../const.js';
 
 export default class TownModel {
-  towns = Array.from({length: TOWN_COUNTS}, getRandomTown);
+  #towns = Array.from({length: TOWN_COUNTS}, getRandomTown);
 
   getTowns() {
-    return this.towns;
+    return this.#towns;
   }
 
   getTownNameById(townArr, id) {
