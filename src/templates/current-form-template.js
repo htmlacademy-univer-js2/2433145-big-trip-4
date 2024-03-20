@@ -1,5 +1,5 @@
 import {TYPE_POINTS, DESTINATIONS, OFFERS, IMAGES} from '../const.js';
-import { getRandomValue, getFullDate } from '../utils.js';
+import { getRandomValue, getFullDate } from '../utils/utils.js';
 
 function createCurrentFormTemplate (pointForm) {
   return `<li class="trip-events__item">

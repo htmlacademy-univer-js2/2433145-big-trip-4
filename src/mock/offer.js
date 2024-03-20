@@ -1,4 +1,4 @@
-import {getRandomArrayElement, getRandomValue} from '../utils.js';
+import {getRandomArrayElement, getRandomValue} from '../utils/utils.js';
 import {TYPE_POINTS, OFFERS} from '../const.js';
 
 function getRandomOffer() {

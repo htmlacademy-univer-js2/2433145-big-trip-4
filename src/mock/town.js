@@ -1,4 +1,4 @@
-import {getRandomArrayElement, getRandomValue} from '../utils.js';
+import {getRandomArrayElement, getRandomValue} from '../utils/utils.js';
 import {DESTINATIONS, DESCRIPTION} from '../const.js';
 
 function getRandomTown() {

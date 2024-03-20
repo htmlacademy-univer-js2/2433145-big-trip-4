@@ -1,6 +1,6 @@
 import {getRandomPoint} from '../mock/point.js';
 import { OFFERS_COUNT, POINTS_COUNT } from '../const.js';
-import {getRandomArrayElement, getRandomValue} from '../utils.js';
+import {getRandomArrayElement, getRandomValue} from '../utils/utils.js';
 import TownModel from '../model/town-model.js';
 import OfferModel from '../model/offer-model.js';
 

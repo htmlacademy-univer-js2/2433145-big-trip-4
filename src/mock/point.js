@@ -1,4 +1,4 @@
-import {getRandomArrayElement, getRandomValue, getDate} from '../utils.js';
+import {getRandomArrayElement, getRandomValue, getDate} from '../utils/utils.js';
 import { TYPE_POINTS } from '../const.js';
 
 function getRandomPoint(destinationID, offersID) {
