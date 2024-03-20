@@ -1,4 +1,4 @@
-import { getRandomValue } from './utils.js';
+import { getRandomValue } from './utils/utils.js';
 
 const POINTS_COUNT = 3;
 const TOWN_COUNTS = 8;
@@ -14,4 +14,12 @@ const IMAGE_URL = 'https://loremflickr.com/248/152?random=';
 for (let i = 0; i < IMAGE_COUNT; i++){
   IMAGES.push(`${IMAGE_URL}${getRandomValue()}`);
 }
-export {POINTS_COUNT, TOWN_COUNTS, OFFERS_COUNT, IMAGE_COUNT, TYPE_POINTS, DESTINATIONS, OFFERS, DESCRIPTION, IMAGE_URL, IMAGES};
+
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past'
+};
+
+export {POINTS_COUNT, TOWN_COUNTS, OFFERS_COUNT, IMAGE_COUNT, TYPE_POINTS, DESTINATIONS, OFFERS, DESCRIPTION, IMAGE_URL, IMAGES, FilterType};
