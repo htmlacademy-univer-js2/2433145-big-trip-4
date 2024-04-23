@@ -49,4 +49,12 @@ function getRandomValue(minimum = 0, maximum = 3000) {
   return Math.floor(Math.random() * (maximum - minimum) + minimum);
 }
 
-export {getRandomArrayElement, getRandomValue, getDate, getDateDiff, getTime, getMonthAndDate, getFullDate};
+function updateItem (items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
+
+function isEscapeButton (evt) {
+  return evt.key === 'Escape';
+}
+
+export {getRandomArrayElement, getRandomValue, getDate, getDateDiff, getTime, getMonthAndDate, getFullDate, updateItem, isEscapeButton};
