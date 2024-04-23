@@ -53,4 +53,8 @@ function updateItem (items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export {getRandomArrayElement, getRandomValue, getDate, getDateDiff, getTime, getMonthAndDate, getFullDate, updateItem};
+function isEscapeButton (evt) {
+  return evt.key === 'Escape';
+}
+
+export {getRandomArrayElement, getRandomValue, getDate, getDateDiff, getTime, getMonthAndDate, getFullDate, updateItem, isEscapeButton};
