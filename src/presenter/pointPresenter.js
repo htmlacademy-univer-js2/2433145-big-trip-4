@@ -4,6 +4,7 @@ import { RenderPosition, remove, render, replace } from '../framework/render.js'
 import OpenFormBtnView from '../view/open-form-button-view.js';
 import CloseFormBtnView from '../view/close-form-button-view.js';
 import SaveFormBtnView from '../view/save-form-btn-view.js';
+import {isEscapeButton} from '../utils/utils.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -32,13 +33,6 @@ export default class PointPresenter {
     const prevPointComponent = this.#pointComponent;
     const prevFormComponent = this.#pointFormComponent;
 
-    const escKeyDownBtnHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        this.#replacePointToForm();
-        document.removeEventListener('keydown', escKeyDownBtnHandler);
-      }
-    };
-
     this.#pointComponent = new RoutePointView({
       data: this.#point,
       onFavouriteClick: this.#handleFavouriteClick,
@@ -48,29 +42,29 @@ export default class PointPresenter {
       data: this.#point,
       onSubmit: () => {
         this.#replacePointToForm();
-        document.removeEventListener('keydown', escKeyDownBtnHandler);
+        document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
       }
     });
 
-    const deleteBtn = this.#pointFormComponent.element.querySelector('.event__reset-btn');
+    const deleteButton = this.#pointFormComponent.element.querySelector('.event__reset-btn');
 
-    const openBtn = new OpenFormBtnView({
+    const openButton = new OpenFormBtnView({
       onClick: () => {
         this.#replaceFormToPoint();
-        document.addEventListener('keydown', escKeyDownBtnHandler);
+        document.addEventListener('keydown', this.#escKeyDownButtonHandler);
       }});
 
-    const closeBtn = new CloseFormBtnView({
+    const closeButton = new CloseFormBtnView({
       onClick: () => {
         this.#replacePointToForm();
-        document.removeEventListener('keydown', escKeyDownBtnHandler);
+        document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
       }});
 
-    const saveBtn = new SaveFormBtnView();
+    const saveButton = new SaveFormBtnView();
 
-    render(openBtn, this.#pointComponent.element, RenderPosition.BEFOREEND);
-    render(saveBtn, deleteBtn, RenderPosition.BEFOREBEGIN);
-    render(closeBtn, deleteBtn, RenderPosition.AFTEREND);
+    render(openButton, this.#pointComponent.element, RenderPosition.BEFOREEND);
+    render(saveButton, deleteButton, RenderPosition.BEFOREBEGIN);
+    render(closeButton, deleteButton, RenderPosition.AFTEREND);
 
     if (prevPointComponent === null || prevFormComponent === null) {
       render(this.#pointComponent, this.#pointsListView);
@@ -113,5 +107,12 @@ export default class PointPresenter {
 
   #handleFavouriteClick = () => {
     this.#handlePointChange({...this.#point, isFavorite: !this.#point.isFavorite});
+  };
+
+  #escKeyDownButtonHandler = (evt) => {
+    if (isEscapeButton(evt)) {
+      this.#replacePointToForm();
+      document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
+    }
   };
 }
