@@ -1,7 +1,8 @@
-import {TYPE_POINTS, DESTINATIONS, OFFERS, IMAGES} from '../const.js';
-import { getRandomValue, getFullDate } from '../utils/utils.js';
+import {TYPE_POINTS, DESTINATIONS, IMAGES} from '../const.js';
+import { getFullDate } from '../utils/utils.js';
 
 function createCurrentFormTemplate (pointForm) {
+  const offersArr = pointForm.offers;
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -56,12 +57,12 @@ function createCurrentFormTemplate (pointForm) {
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
-        ${OFFERS.map((offer) => `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.toLowerCase()}-1" type="checkbox" name="event-offer-${offer.toLowerCase()}" ${isChecked(pointForm.offers, offer)}>
-        <label class="event__offer-label" for="event-offer-${offer.toLowerCase()}-1">
-          <span class="event__offer-title">${offer}</span>
+        ${offersArr.map((offer) => `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title.toLowerCase()}-1" type="checkbox" name="event-offer-${offer.title.toLowerCase()}" ${offer.isChecked ? 'checked' : ''}>
+        <label class="event__offer-label" for="event-offer-${offer.title.toLowerCase()}-1">
+          <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${getRandomValue()}</span>
+          <span class="event__offer-price">${offer.price}</span>
         </label>
       </div>`).join('')};
 
@@ -79,17 +80,6 @@ function createCurrentFormTemplate (pointForm) {
   </form>
 </li>
 `;
-}
-
-function isChecked(offers, title) {
-  let check = false;
-  offers.forEach((offer) => {
-    if (offer.title === title) {
-      check = true;
-      return check;
-    }
-  });
-  return check ? 'checked' : '';
 }
 
 export {createCurrentFormTemplate};
