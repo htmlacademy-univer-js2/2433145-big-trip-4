@@ -1,29 +1,22 @@
-import { getRandomValue } from './utils/utils.js';
-
 const POINTS_COUNT = 3;
 const TOWN_COUNTS = 8;
 const OFFERS_COUNT = 5;
 const IMAGE_COUNT = 4;
-const IMAGES = [];
 
-const TYPE_POINTS = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
-const DESTINATIONS = ['Amsterdam', 'Chamonix', 'Magnitogorsk', 'Chicago', 'Los Angeles', 'Moskow', 'Saint-Peterburg'];
+const TYPE_POINTS = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const DESTINATIONS = ['Amsterdam', 'Chamonix', 'Magnitogorsk', 'Chicago', 'Los Angeles', 'Moskow', 'Saint-Peterburg', 'Voronezh'];
 const OFFERS = {
-  'Taxi': ['Switch to comfort class', 'Switch to business class', 'Choose seats', 'Add luggage', 'Add meal'],
-  'Bus': ['Add meal'],
-  'Train': ['Switch to comfort class', 'Switch to business class', 'Choose seats', 'Add luggage', 'Add meal'],
-  'Ship': ['Switch to comfort class', 'Switch to business class', 'Choose seats', 'Add luggage', 'Add meal'],
-  'Drive': [],
-  'Flight': ['Switch to comfort class', 'Switch to business class', 'Choose seats', 'Add luggage', 'Add meal'],
-  'Check-in': [],
-  'Sightseeing': ['Travel by train', 'Add meal'],
-  'Restaurant': []
+  'taxi': ['Switch to comfort class', 'Switch to business class', 'Choose seats', 'Add luggage', 'Add meal'],
+  'bus': ['Add meal'],
+  'train': ['Switch to comfort class', 'Switch to business class', 'Choose seats', 'Add luggage', 'Add meal'],
+  'ship': ['Switch to comfort class', 'Switch to business class', 'Choose seats', 'Add luggage', 'Add meal'],
+  'drive': [],
+  'flight': ['Switch to comfort class', 'Switch to business class', 'Choose seats', 'Add luggage', 'Add meal'],
+  'check-in': [],
+  'sightseeing': ['Travel by train', 'Add meal'],
+  'restaurant': []
 };
 const DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.';
-const IMAGE_URL = 'https://loremflickr.com/248/152?random=';
-for (let i = 0; i < IMAGE_COUNT; i++){
-  IMAGES.push(`${IMAGE_URL}${getRandomValue()}`);
-}
 
 const FilterType = {
   EVERYTHING: 'everything',
@@ -40,4 +33,4 @@ const SortType = {
   OFFERS: 'offer'
 };
 
-export {POINTS_COUNT, TOWN_COUNTS, OFFERS_COUNT, IMAGE_COUNT, TYPE_POINTS, DESTINATIONS, OFFERS, DESCRIPTION, IMAGE_URL, IMAGES, FilterType, SortType};
+export {POINTS_COUNT, TOWN_COUNTS, OFFERS_COUNT, IMAGE_COUNT, TYPE_POINTS, DESTINATIONS, OFFERS, DESCRIPTION, FilterType, SortType};

@@ -5,24 +5,31 @@ import TownModel from '../model/town-model.js';
 import OfferModel from '../model/offer-model.js';
 
 export default class PointModel {
-  townModel = new TownModel();
-  towns = this.townModel.getTowns();
+  townModel = null;
+  offerModel = null;
+  towns = null;
+  points = null;
 
-  points = Array.from({length: POINTS_COUNT}, () => {
-    const townID = getRandomArrayElement(this.towns).id;
-    const point = (getRandomPoint(townID));
-    point.destination = this.townModel.getTownNameById(this.towns, townID);
-    const offerModel = new OfferModel(point.type);
-    if (point.offers === 'not assigned') {
-      point.offers = offerModel.getOffers();
-    }
-    else {
-      offerModel.createOffers(point.offers);
-      point.offers = offerModel.getOffers();
-    }
-    point.description = this.townModel.getTownDescByID(this.towns, townID);
-    return point;
-  });
+  constructor () {
+    this.townModel = new TownModel();
+    this.towns = this.townModel.getTowns();
+    this.points = Array.from({length: POINTS_COUNT}, () => {
+      const townID = getRandomArrayElement(this.towns).id;
+      const point = (getRandomPoint(townID));
+      this.offerModel = new OfferModel(point.type);
+      if (point.offers === 'not assigned') {
+        point.offers = this.offerModel.getOffers();
+      }
+      else {
+        this.offerModel.createOffers(point.offers);
+        point.offers = this.offerModel.getOffers();
+      }
+      point.destination = this.townModel.getTownNameById(townID);
+      point.description = this.townModel.getTownDescByID(townID);
+      point.photos = this.townModel.getPhotosByID(townID);
+      return point;
+    });
+  }
 
   getPoints() {
     return this.points;

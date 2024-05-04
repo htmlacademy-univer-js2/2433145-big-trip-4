@@ -28,15 +28,18 @@ export default class OfferModel {
 
   updateOffers(newType) {
     this.createOffers(newType);
+    return this.offers;
   }
 
   createOffers(type) {
-    OFFERS[type].forEach((offerName) => {
-      this.offers.push({
-        title: offerName,
-        price: getRandomValue(),
-        isChecked: getRandomArrayElement([0, 1])
+    if (OFFERS[type] !== undefined) {
+      OFFERS[type].forEach((offerName) => {
+        this.offers.push({
+          title: offerName,
+          price: getRandomValue(),
+          isChecked: getRandomArrayElement([0, 1])
+        });
       });
-    });
+    }
   }
 }

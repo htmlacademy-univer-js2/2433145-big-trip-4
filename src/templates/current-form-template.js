@@ -1,8 +1,9 @@
-import {TYPE_POINTS, DESTINATIONS, IMAGES} from '../const.js';
+import {TYPE_POINTS, DESTINATIONS} from '../const.js';
 import { getFullDate } from '../utils/utils.js';
 
 function createCurrentFormTemplate (pointForm) {
-  const offersArr = pointForm.offers;
+  const offersArr = pointForm.offers !== undefined ? pointForm.offers : [];
+  const photosArr = pointForm.photos;
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -72,7 +73,7 @@ function createCurrentFormTemplate (pointForm) {
 
         <div class="event__photos-container">
           <div class="event__photos-tape">
-          ${IMAGES.map((img) => `<img class="event__photo" src="${img}.jpg" alt="Event photo">`).join('')};
+          ${photosArr.map((img) => `<img class="event__photo" src="${img}.jpg" alt="Event photo">`).join('')};
           </div>
         </div>
       </section>
