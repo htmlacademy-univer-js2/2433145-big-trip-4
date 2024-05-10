@@ -1,4 +1,4 @@
-import {getDateDiff, getMonthAndDate, getTime} from '../utils/utils.js';
+import {getMonthAndDate, getTime} from '../utils/utils.js';
 
 function createRoutePointTemplate (point) {
   const offersArr = point.offers;
@@ -14,7 +14,7 @@ function createRoutePointTemplate (point) {
                 &mdash;
                 <time class="event__end-time" datetime="${point.dateTo}">${getTime(point.dateTo)}</time>
               </p>
-              <p class="event__duration">${getDateDiff(point.dateFrom, point.dateTo)}</p>
+              <p class="event__duration">${point.duration}</p>
             </div>
             <p class="event__price">
               &euro;&nbsp;<span class="event__price-value">${point.basePrice}</span>
