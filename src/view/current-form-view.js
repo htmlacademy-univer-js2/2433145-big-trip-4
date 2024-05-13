@@ -84,6 +84,7 @@ export default class CurrentFormView extends AbstractStatefulView{
       },
     );
   }
+
   static parsePointToState(point) {
     return {...point};
   }
