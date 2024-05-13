@@ -1,16 +1,15 @@
-import {getRandomTown} from '../mock/town.js';
-import {TOWN_COUNTS} from '../const.js';
+import {getTownsArr} from '../mock/town.js';
 
 export default class TownModel {
-  #towns = Array.from({length: TOWN_COUNTS}, getRandomTown);
+  #towns = getTownsArr();
 
   getTowns() {
     return this.#towns;
   }
 
-  getTownNameById(townArr, id) {
+  getTownNameById(id) {
     let temp = '';
-    townArr.forEach((town) => {
+    this.#towns.forEach((town) => {
       if (town.id === id) {
         temp = town.name;
       }
@@ -18,11 +17,31 @@ export default class TownModel {
     return temp;
   }
 
-  getTownDescByID(townArr, id) {
+  getTownDescByID(id) {
     let temp = '';
-    townArr.forEach((town) => {
+    this.#towns.forEach((town) => {
       if (town.id === id) {
         temp = town.description;
+      }
+    });
+    return temp;
+  }
+
+  getPhotosByID(id) {
+    let temp = '';
+    this.#towns.forEach((town) => {
+      if (town.id === id) {
+        temp = town.photos;
+      }
+    });
+    return temp;
+  }
+
+  getIDByTownName(townName) {
+    let temp = '';
+    this.#towns.forEach((town) => {
+      if (town.name === townName) {
+        temp = town.id;
       }
     });
     return temp;
