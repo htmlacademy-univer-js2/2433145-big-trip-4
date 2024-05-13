@@ -14,4 +14,27 @@ function getRandomPoint(destinationID, offersID) {
   });
 }
 
-export {getRandomPoint};
+function sortPointsByPrice(pointA, pointB) {
+  if (pointA.basePrice < pointB.basePrice) {
+    return 1;
+  }
+  if (pointA.basePrice > pointB.basePrice) {
+    return -1;
+  }
+  return 0;
+}
+
+function sortPointsByTime(pointA, pointB) {
+  const durationA = pointA.dateTo - pointA.dateFrom;
+  const durationB = pointB.dateTo - pointB.dateFrom;
+  if (durationA < durationB) {
+    return 1;
+  }
+
+  if (durationA > durationB) {
+    return -1;
+  }
+  return 0;
+}
+
+export {getRandomPoint, sortPointsByTime, sortPointsByPrice};
