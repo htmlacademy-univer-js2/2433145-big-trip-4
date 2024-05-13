@@ -27,10 +27,8 @@ const FilterType = {
 
 const SortType = {
   DATE: 'day',
-  EVENT: 'event',
   TIME: 'time',
   PRICE: 'price',
-  OFFERS: 'offer'
 };
 
 export {POINTS_COUNT, TOWN_COUNTS, OFFERS_COUNT, IMAGE_COUNT, TYPE_POINTS, DESTINATIONS, OFFERS, DESCRIPTION, FilterType, SortType};
