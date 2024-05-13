@@ -5,6 +5,8 @@ import OpenFormBtnView from '../view/open-form-button-view.js';
 import CloseFormBtnView from '../view/close-form-button-view.js';
 import SaveFormBtnView from '../view/save-form-btn-view.js';
 import {isEscapeButton} from '../utils/utils.js';
+import OfferModel from '../model/offer-model.js';
+import PointModel from '../model/point-model.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -20,6 +22,8 @@ export default class PointPresenter {
 
   #pointComponent = null;
   #pointFormComponent = null;
+  #offerModel = new OfferModel('not assigned');
+  #pointModel = new PointModel();
 
   constructor ({pointListContainer, onDataChange, onModeChange}) {
     this.#pointsListView = pointListContainer;
@@ -43,7 +47,9 @@ export default class PointPresenter {
       onSubmit: () => {
         this.#replacePointToForm();
         document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
-      }
+      },
+      pointModel: this.#pointModel,
+      offerModel: this.#offerModel
     });
 
     const deleteButton = this.#pointFormComponent.element.querySelector('.event__reset-btn');
