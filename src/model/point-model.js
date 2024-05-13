@@ -40,4 +40,3 @@ export default class PointModel {
     return this.points[0];
   }
 }
-
