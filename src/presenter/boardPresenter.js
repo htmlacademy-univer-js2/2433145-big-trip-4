@@ -42,6 +42,16 @@ export default class BoardPresenter {
     for (const elem in SortType) {
       this.#renderSort(SortType[elem]);
     }
+    const daySort = this.#sortFormView.element.querySelector('.trip-sort__item--day');
+    const priceSort = this.#sortFormView.element.querySelector('.trip-sort__item--price');
+    render(new SortItemView({
+      sort: 'event',
+      onSortTypeChange: this.#handleSortTypeChange
+    }), daySort, RenderPosition.AFTEREND);
+    render(new SortItemView({
+      sort: 'offer',
+      onSortTypeChange: this.#handleSortTypeChange
+    }), priceSort, RenderPosition.AFTEREND);
     for (let i = 0; i < filters.length; i++) {
       render(new FilterItemView(filters[i]), this.#filterFormView.element);
     }
