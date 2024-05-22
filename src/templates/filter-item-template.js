@@ -1,12 +1,9 @@
-function createFilterItemTemplate (filter) {
+function createFilterItemTemplate (filter, currentFilterType) {
   return `<div class="trip-filters__filter">
-            <input id="filter-${filter.type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" ${isAvailible(filter)} value="${filter.type}">
-            <label class="trip-filters__filter-label" for="filter-${filter.type}">${filter.type}</label>
+            <input id="filter-${filter}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" ${filter === currentFilterType ? 'checked' : ''} value="${filter}">
+            <label class="trip-filters__filter-label" for="filter-${filter}">${filter}</label>
           </div>`;
 }
 
-function isAvailible(filter) {
-  return filter.exists ? '' : 'disabled';
-}
 
 export {createFilterItemTemplate};

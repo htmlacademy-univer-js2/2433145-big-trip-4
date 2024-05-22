@@ -1,9 +1,10 @@
 import {TYPE_POINTS, DESTINATIONS} from '../const.js';
 import { getFullDate } from '../utils/utils.js';
+import he from 'he';
 
 function createCurrentFormTemplate (pointForm) {
-  const offersArr = pointForm.offers !== undefined ? pointForm.offers : [];
-  const photosArr = pointForm.photos;
+  const offersArr = pointForm.offers ? pointForm.offers : [];
+  const photosArr = pointForm.photos ? pointForm.photos : [];
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -31,7 +32,7 @@ function createCurrentFormTemplate (pointForm) {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${pointForm.destination}" list="destination-list-1">
         <datalist id="destination-list-1">
-          ${DESTINATIONS.map((town) => `<option value="${town}"></option>`).join('')};
+          ${he.encode(DESTINATIONS.map((town) => `<option value="${town}"></option>`).join(''))};
         </datalist>
       </div>
 
@@ -48,7 +49,7 @@ function createCurrentFormTemplate (pointForm) {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="">
       </div>
 
       <button class="event__reset-btn" type="reset">Delete</button>'
@@ -63,7 +64,7 @@ function createCurrentFormTemplate (pointForm) {
         <label class="event__offer-label" for="event-offer-${offer.title.toLowerCase()}-1">
           <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
+          <span class="event__offer-price ">${offer.price}</span>
         </label>
       </div>`).join('')};
 
