@@ -4,14 +4,14 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 export default class CurrentFormView extends AbstractStatefulView{
-  #pointForm = null;
   #handleSubmit = null;
+  #resetButtonsHandler = null;
   #offerModel = null;
   #pointModel = null;
   #datepickerTo = null;
   #datepickerFrom = null;
 
-  constructor ({data, onSubmit, pointModel, offerModel}) {
+  constructor ({data, onSubmit, pointModel, offerModel, resetButtons}) {
     super();
     this._setState(CurrentFormView.parsePointToState(data));
     this.#handleSubmit = onSubmit;
@@ -22,6 +22,7 @@ export default class CurrentFormView extends AbstractStatefulView{
     this.#setDatepickerTo();
     this.#offerModel = offerModel;
     this.#pointModel = pointModel;
+    this.#resetButtonsHandler = resetButtons;
   }
 
   get template() {
@@ -37,8 +38,9 @@ export default class CurrentFormView extends AbstractStatefulView{
     evt.preventDefault();
     this.updateElement({
       type: evt.target.value,
-      offers: this.#pointModel.offerModel.updateOffers(evt.target.value)
+      offers: this.#offerModel.updateOffers(evt.target.value)
     });
+    this.#resetButtonsHandler();
   };
 
   #destinationToggleHandler = (evt) => {
@@ -49,18 +51,21 @@ export default class CurrentFormView extends AbstractStatefulView{
       description: this.#pointModel.townModel.getTownDescByID(tempID),
       photos: this.#pointModel.townModel.getPhotosByID(tempID)
     });
+    this.#resetButtonsHandler();
   };
 
   #dateFromChangeHandler = ([userDate]) => {
     this.updateElement({
       dateFrom: userDate,
     });
+    this.#resetButtonsHandler();
   };
 
   #dateToChangeHandler = ([userDate]) => {
     this.updateElement({
       dateTo: userDate,
     });
+    this.#resetButtonsHandler();
   };
 
   #setDatepickerFrom() {

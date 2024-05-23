@@ -7,6 +7,8 @@ import SaveFormBtnView from '../view/save-form-btn-view.js';
 import {isEscapeButton} from '../utils/utils.js';
 import OfferModel from '../model/offer-model.js';
 import PointModel from '../model/point-model.js';
+import { UserAction, UpdateType } from '../const.js';
+import DeleteBtnView from '../view/delete-btn-view.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -19,6 +21,7 @@ export default class PointPresenter {
   #handleModeChange = null;
   #point = null;
   #mode = Mode.DEFAULT;
+  #deleteButton = null;
 
   #pointComponent = null;
   #pointFormComponent = null;
@@ -44,36 +47,17 @@ export default class PointPresenter {
 
     this.#pointFormComponent = new CurrentFormView({
       data: this.#point,
-      onSubmit: () => {
-        this.#replacePointToForm();
-        document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
-      },
+      onSubmit: this.#handleFormSubmit,
       pointModel: this.#pointModel,
-      offerModel: this.#offerModel
+      offerModel: this.#offerModel,
+      resetButtons: this.resetButtons
     });
-
-    const deleteButton = this.#pointFormComponent.element.querySelector('.event__reset-btn');
-
-    const openButton = new OpenFormBtnView({
-      onClick: () => {
-        this.#replaceFormToPoint();
-        document.addEventListener('keydown', this.#escKeyDownButtonHandler);
-      }});
-
-    const closeButton = new CloseFormBtnView({
-      onClick: () => {
-        this.#replacePointToForm();
-        document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
-      }});
-
-    const saveButton = new SaveFormBtnView();
-
-    render(openButton, this.#pointComponent.element, RenderPosition.BEFOREEND);
-    render(saveButton, deleteButton, RenderPosition.BEFOREBEGIN);
-    render(closeButton, deleteButton, RenderPosition.AFTEREND);
+    this.#deleteButton = new DeleteBtnView ();
 
     if (prevPointComponent === null || prevFormComponent === null) {
       render(this.#pointComponent, this.#pointsListView);
+      this.#deleteButton.element.addEventListener('click', () => this.#handleDeleteClick(CurrentFormView.parseStateToPoint(this.#pointFormComponent._state)));
+      this.resetButtons();
       return;
     }
 
@@ -100,6 +84,30 @@ export default class PointPresenter {
     }
   }
 
+  resetButtons = () => {
+    const openButton = new OpenFormBtnView({
+      onClick: () => {
+        this.#replaceFormToPoint();
+        this.resetButtons();
+        document.addEventListener('keydown', this.#escKeyDownButtonHandler);
+      }});
+    const closeButton = new CloseFormBtnView({
+      onClick: () => {
+        this.#replacePointToForm();
+        document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
+      }});
+    const saveButton = new SaveFormBtnView();
+    if (this.#mode === Mode.EDITING) {
+      render(saveButton, this.#pointFormComponent.element.querySelector('.event__field-group--price'), RenderPosition.AFTEREND);
+      render(closeButton, saveButton.element, RenderPosition.AFTEREND);
+      render(this.#deleteButton, saveButton.element, RenderPosition.AFTEREND);
+
+    }
+    else {
+      render(openButton, this.#pointComponent.element, RenderPosition.BEFOREEND);
+    }
+  };
+
   #replacePointToForm() {
     replace(this.#pointComponent, this.#pointFormComponent);
     this.#mode = Mode.DEFAULT;
@@ -112,7 +120,27 @@ export default class PointPresenter {
   }
 
   #handleFavouriteClick = () => {
-    this.#handlePointChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handlePointChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite});
+  };
+
+  #handleFormSubmit = (update) => {
+    this.#handlePointChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      update
+    );
+    this.#replaceFormToPoint();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handlePointChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point
+    );
   };
 
   #escKeyDownButtonHandler = (evt) => {

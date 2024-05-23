@@ -27,12 +27,13 @@ export default class OfferModel {
   }
 
   updateOffers(newType) {
+    this.offers = [];
     this.createOffers(newType);
     return this.offers;
   }
 
   createOffers(type) {
-    if (OFFERS[type] !== undefined) {
+    if (OFFERS[type]) {
       OFFERS[type].forEach((offerName) => {
         this.offers.push({
           title: offerName,
