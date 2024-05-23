@@ -8,6 +8,7 @@ import {isEscapeButton} from '../utils/utils.js';
 import OfferModel from '../model/offer-model.js';
 import PointModel from '../model/point-model.js';
 import { UserAction, UpdateType } from '../const.js';
+import DeleteBtnView from '../view/delete-btn-view.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -47,15 +48,15 @@ export default class PointPresenter {
     this.#pointFormComponent = new CurrentFormView({
       data: this.#point,
       onSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick,
       pointModel: this.#pointModel,
       offerModel: this.#offerModel,
       resetButtons: this.resetButtons
     });
+    this.#deleteButton = new DeleteBtnView ();
 
     if (prevPointComponent === null || prevFormComponent === null) {
       render(this.#pointComponent, this.#pointsListView);
-      this.#deleteButton = this.#pointFormComponent.element.querySelector('.event__reset-btn');
+      this.#deleteButton.element.addEventListener('click', () => this.#handleDeleteClick(CurrentFormView.parseStateToPoint(this.#pointFormComponent._state)));
       this.resetButtons();
       return;
     }
@@ -83,10 +84,11 @@ export default class PointPresenter {
     }
   }
 
-  resetButtons() {
+  resetButtons = () => {
     const openButton = new OpenFormBtnView({
       onClick: () => {
         this.#replaceFormToPoint();
+        this.resetButtons();
         document.addEventListener('keydown', this.#escKeyDownButtonHandler);
       }});
     const closeButton = new CloseFormBtnView({
@@ -95,10 +97,16 @@ export default class PointPresenter {
         document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
       }});
     const saveButton = new SaveFormBtnView();
-    render(openButton, this.#pointComponent.element, RenderPosition.BEFOREEND);
-    render(saveButton, this.#deleteButton, RenderPosition.BEFOREBEGIN);
-    render(closeButton, this.#deleteButton, RenderPosition.AFTEREND);
-  }
+    if (this.#mode === Mode.EDITING) {
+      render(saveButton, this.#pointFormComponent.element.querySelector('.event__field-group--price'), RenderPosition.AFTEREND);
+      render(closeButton, saveButton.element, RenderPosition.AFTEREND);
+      render(this.#deleteButton, saveButton.element, RenderPosition.AFTEREND);
+
+    }
+    else {
+      render(openButton, this.#pointComponent.element, RenderPosition.BEFOREEND);
+    }
+  };
 
   #replacePointToForm() {
     replace(this.#pointComponent, this.#pointFormComponent);

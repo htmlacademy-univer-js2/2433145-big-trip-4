@@ -32,7 +32,7 @@ function createCurrentFormTemplate (pointForm) {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${pointForm.destination}" list="destination-list-1">
         <datalist id="destination-list-1">
-          ${he.encode(DESTINATIONS.map((town) => `<option value="${town}"></option>`).join(''))};
+          ${he.encode(DESTINATIONS.map((town) => `<option value="${town}"></option>`).join(''))}
         </datalist>
       </div>
 
@@ -51,8 +51,7 @@ function createCurrentFormTemplate (pointForm) {
         </label>
         <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="">
       </div>
-
-      <button class="event__reset-btn" type="reset">Delete</button>'
+      
     </header>
     <section class="event__details">
       <section class="event__section  event__section--offers">

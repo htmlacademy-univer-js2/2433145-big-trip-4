@@ -5,20 +5,17 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 export default class CurrentFormView extends AbstractStatefulView{
   #handleSubmit = null;
-  #handleDeleteClick = null;
   #resetButtonsHandler = null;
   #offerModel = null;
   #pointModel = null;
   #datepickerTo = null;
   #datepickerFrom = null;
 
-  constructor ({data, onSubmit, onDeleteClick, pointModel, offerModel, resetButtons}) {
+  constructor ({data, onSubmit, pointModel, offerModel, resetButtons}) {
     super();
     this._setState(CurrentFormView.parsePointToState(data));
     this.#handleSubmit = onSubmit;
-    this.#handleDeleteClick = onDeleteClick;
     this.element.querySelector('form').addEventListener('submit', this.#submitHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteHandler);
     this.element.querySelector('.event__type-list').addEventListener('change', this.#typeRouteToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
     this.#setDatepickerFrom();
@@ -35,11 +32,6 @@ export default class CurrentFormView extends AbstractStatefulView{
   #submitHandler = (evt) => {
     evt.preventDefault();
     this.#handleSubmit(CurrentFormView.parseStateToPoint(this._state));
-  };
-
-  #deleteHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleDeleteClick(CurrentFormView.parseStateToPoint(this._state));
   };
 
   #typeRouteToggleHandler = (evt) => {
@@ -59,18 +51,21 @@ export default class CurrentFormView extends AbstractStatefulView{
       description: this.#pointModel.townModel.getTownDescByID(tempID),
       photos: this.#pointModel.townModel.getPhotosByID(tempID)
     });
+    this.#resetButtonsHandler();
   };
 
   #dateFromChangeHandler = ([userDate]) => {
     this.updateElement({
       dateFrom: userDate,
     });
+    this.#resetButtonsHandler();
   };
 
   #dateToChangeHandler = ([userDate]) => {
     this.updateElement({
       dateTo: userDate,
     });
+    this.#resetButtonsHandler();
   };
 
   #setDatepickerFrom() {
