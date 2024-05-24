@@ -28,7 +28,6 @@ export default class PointModel extends Observable{
     this.#offerModel.init();
     this.townModel.init();
     this.#towns = this.townModel.towns;
-    console.log(this.#towns);
     this.#points = [];
     // this.#points = Array.from({length: POINTS_COUNT}, () => {
     //   const townID = getRandomArrayElement(this.#towns).id;
