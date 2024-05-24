@@ -3,6 +3,7 @@ import { getFullDate } from '../utils/utils.js';
 import he from 'he';
 
 function createCurrentFormTemplate (pointForm) {
+  console.log(pointForm);
   const offersArr = pointForm.offers ? pointForm.offers : [];
   const photosArr = pointForm.photos ? pointForm.photos : [];
   return `<li class="trip-events__item">
@@ -51,7 +52,7 @@ function createCurrentFormTemplate (pointForm) {
         </label>
         <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="">
       </div>
-      
+
     </header>
     <section class="event__details">
       <section class="event__section  event__section--offers">
