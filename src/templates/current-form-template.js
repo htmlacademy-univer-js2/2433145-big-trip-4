@@ -3,7 +3,6 @@ import { getFullDate } from '../utils/utils.js';
 import he from 'he';
 
 function createCurrentFormTemplate (pointForm) {
-  console.log(pointForm);
   const offersArr = pointForm.offers ? pointForm.offers : [];
   const photosArr = pointForm.photos ? pointForm.photos : [];
   return `<li class="trip-events__item">
