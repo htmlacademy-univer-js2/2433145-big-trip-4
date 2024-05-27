@@ -3,7 +3,7 @@ import OfferModel from '../model/offer-model.js';
 import Observable from '../framework/observable.js';
 import {UpdateType} from '../const.js';
 import { getDateDiff } from '../utils/utils.js';
-
+//исправить позже
 
 export default class PointModel extends Observable{
   townModel = null;
