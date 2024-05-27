@@ -6,7 +6,6 @@ import CloseFormBtnView from '../view/close-form-button-view.js';
 import SaveFormBtnView from '../view/save-form-btn-view.js';
 import {isEscapeButton} from '../utils/utils.js';
 import OfferModel from '../model/offer-model.js';
-import PointModel from '../model/point-model.js';
 import { UserAction, UpdateType } from '../const.js';
 import DeleteBtnView from '../view/delete-btn-view.js';
 
@@ -26,12 +25,13 @@ export default class PointPresenter {
   #pointComponent = null;
   #pointFormComponent = null;
   #offerModel = new OfferModel('not assigned');
-  #pointModel = new PointModel();
+  #pointModel = null;
 
-  constructor ({pointListContainer, onDataChange, onModeChange}) {
+  constructor ({pointListContainer, onDataChange, onModeChange, pointModel}) {
     this.#pointsListView = pointListContainer;
     this.#handlePointChange = onDataChange;
     this.#handleModeChange = onModeChange;
+    this.#pointModel = pointModel;
   }
 
   init(point) {

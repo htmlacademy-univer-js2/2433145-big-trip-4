@@ -9,10 +9,13 @@ import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import SortItemView from '../view/sort-item-view.js';
 import {sortPointsByPrice, sortPointsByTime} from '../mock/point.js';
 import NewPointPresenter from '../presenter/new-point-presenter.js';
+import LoadingView from '../view/loading-view.js';
 
 export default class BoardPresenter {
   #sortFormView = new SortFormView();
   #pointsListView = new PointsListView();
+  #loadingComponent = new LoadingView();
+  #isLoading = true;
   #sortComponent = null;
   #noPointsComponent = null;
   #mainTrip = new MainTripView();
@@ -68,7 +71,8 @@ export default class BoardPresenter {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#pointsListView.element,
       onDataChange: this.#handleViewAction,
-      onModeChange: this.#handleModeChange
+      onModeChange: this.#handleModeChange,
+      pointModel: this.#pointModel
     });
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
@@ -118,12 +122,18 @@ export default class BoardPresenter {
       this.#currentSortType = SortType.DATE;
     }
 
+    remove(this.#loadingComponent);
+
     if (this.#noPointsComponent) {
       remove(this.#noPointsComponent);
     }
   }
 
   #renderPointsList() {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
     const pointsCount = this.points.length;
     if (pointsCount > 0) {
       render(this.#mainTrip, this.#tripControls, RenderPosition.BEFOREBEGIN);
@@ -159,6 +169,10 @@ export default class BoardPresenter {
     }
   };
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#container, RenderPosition.AFTERBEGIN);
+  }
+
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.MAJOR:
@@ -171,6 +185,11 @@ export default class BoardPresenter {
         break;
       case UpdateType.PATCH:
         this.#pointPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderPointsList();
         break;
     }
   };

@@ -1,10 +1,24 @@
-import { OFFERS } from '../const.js';
-import { getRandomArrayElement, getRandomValue } from '../utils/utils.js';
+import { UpdateType } from '../const.js';
+import Observable from '../framework/observable.js';
 
-export default class OfferModel {
-  offers = [];
-  constructor(type) {
-    this.createOffers(type);
+export default class OfferModel extends Observable{
+  #offers = null;
+  #pointsApiService = null;
+
+  constructor(pointsApiService) {
+    super();
+    this.#offers = [];
+    this.#pointsApiService = pointsApiService;
+  }
+
+  init() {
+    try {
+      const offers = this.#pointsApiService.offers;
+      this.#offers = offers;
+    } catch(err) {
+      this.#offers = [];
+    }
+    this._notify(UpdateType.INIT);
   }
 
   getOffers() {
@@ -30,17 +44,5 @@ export default class OfferModel {
     this.offers = [];
     this.createOffers(newType);
     return this.offers;
-  }
-
-  createOffers(type) {
-    if (OFFERS[type]) {
-      OFFERS[type].forEach((offerName) => {
-        this.offers.push({
-          title: offerName,
-          price: getRandomValue(),
-          isChecked: getRandomArrayElement([0, 1])
-        });
-      });
-    }
   }
 }
