@@ -11,9 +11,7 @@ const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
 const tripInfoContainer = document.querySelector('.trip-events');
 const addPointContainer = document.querySelector('.trip-main');
-const pointModel = new PointModel({
-  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
-});
+const pointModel = new PointModel(new PointsApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
 
 const boardPresenter = new BoardPresenter({

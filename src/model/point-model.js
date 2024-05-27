@@ -1,6 +1,3 @@
-// import {getRandomPoint} from '../mock/point.js';
-// import { POINTS_COUNT } from '../const.js';
-// import {getRandomArrayElement, getDateDiff} from '../utils/utils.js';
 import TownModel from '../model/town-model.js';
 import OfferModel from '../model/offer-model.js';
 import Observable from '../framework/observable.js';
@@ -16,43 +13,22 @@ export default class PointModel extends Observable{
   #points = null;
   #pointsApiService = null;
 
-  constructor ({pointsApiService}) {
+  constructor (pointsApiService) {
     super();
 
     this.#pointsApiService = pointsApiService;
-    // this.#pointsApiService.points.then((points) => {
-    //   console.log(points.map(this.#adaptToClient));
-    // });
     this.#offerModel = new OfferModel(this.#pointsApiService);
     this.townModel = new TownModel(this.#pointsApiService);
     this.#offerModel.init();
     this.townModel.init();
     this.#towns = this.townModel.towns;
     this.#points = [];
-    // this.#points = Array.from({length: POINTS_COUNT}, () => {
-    //   const townID = getRandomArrayElement(this.#towns).id;
-    //   const point = (getRandomPoint(townID));
-    //   this.#offerModel = new OfferModel(point.type);
-    //   if (point.offers === 'not assigned') {
-    //     point.offers = this.#offerModel.getOffers();
-    //   }
-    //   else {
-    //     this.#offerModel.createOffers(point.offers);
-    //     point.offers = this.#offerModel.getOffers();
-    //   }
-    //   point.destination = this.townModel.getTownNameById(townID);
-    //   point.description = this.townModel.getTownDescByID(townID);
-    //   point.photos = this.townModel.getPhotosByID(townID);
-    //   point.duration = getDateDiff(point.dateFrom, point.dateTo);
-    //   return point;
-    // });
   }
 
-  init() {
+  async init() {
     try {
-      const points = this.#pointsApiService.points;
+      const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
-      // console.log(this.#points);
     } catch(err) {
       this.#points = [];
     }
@@ -102,7 +78,6 @@ export default class PointModel extends Observable{
       isFavorite: point['is_favorite'],
       basePrice: point['base_price'],
       duration: getDateDiff(point['date_from'], point['date_to']),
-      // destination:
     };
 
     delete adaptedPoint['date_to'];

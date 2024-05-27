@@ -1,4 +1,3 @@
-// import {getTownsArr} from '../mock/town.js';
 import {UpdateType} from '../const.js';
 import Observable from '../framework/observable.js';
 
@@ -13,17 +12,13 @@ export default class TownModel extends Observable{
   }
 
   init() {
-    this.#pointsApiService.destinations.then((destinations) => {
+    try {
+      const destinations = this.#pointsApiService.destinations;
       this.#destinations = destinations;
-    }).catch((err) => err);
+    } catch(err) {
+      this.#destinations = [];
+    }
     this._notify(UpdateType.INIT);
-    // try {
-    //   const destinations = this.#pointsApiService.destinations;
-    //   this.#destinations = destinations;
-    // } catch(err) {
-    //   this.#destinations = [];
-    // }
-    // this._notify(UpdateType.INIT);
   }
 
   get towns() {

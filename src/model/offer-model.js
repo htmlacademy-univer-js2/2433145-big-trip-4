@@ -1,6 +1,5 @@
 import { UpdateType } from '../const.js';
 import Observable from '../framework/observable.js';
-// import { getRandomArrayElement, getRandomValue } from '../utils/utils.js';
 
 export default class OfferModel extends Observable{
   #offers = null;
@@ -8,7 +7,6 @@ export default class OfferModel extends Observable{
 
   constructor(pointsApiService) {
     super();
-    // this.createOffers(type);
     this.#offers = [];
     this.#pointsApiService = pointsApiService;
   }
@@ -47,16 +45,4 @@ export default class OfferModel extends Observable{
     this.createOffers(newType);
     return this.offers;
   }
-
-  // createOffers(type) {
-  //   if (OFFERS[type]) {
-  //     OFFERS[type].forEach((offerName) => {
-  //       this.offers.push({
-  //         title: offerName,
-  //         price: getRandomValue(),
-  //         isChecked: getRandomArrayElement([0, 1])
-  //       });
-  //     });
-  //   }
-  // }
 }
