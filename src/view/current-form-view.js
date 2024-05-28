@@ -1,8 +1,10 @@
+import { UpdateType } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { createCurrentFormTemplate } from '../templates/current-form-template.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+//лучше по имени переделывать отображение в форме, нежели чем да
 export default class CurrentFormView extends AbstractStatefulView{
   #handleSubmit = null;
   #resetButtonsHandler = null;
@@ -31,40 +33,51 @@ export default class CurrentFormView extends AbstractStatefulView{
 
   #submitHandler = (evt) => {
     evt.preventDefault();
+    const newData = { ...this._state,
+      destination: this.#pointModel.townModel.getIDByTownName(this._state.destination)
+    };
+    this.#pointModel.updatePoint(UpdateType.MINOR, newData);
+    this.updateElement(newData);
+    this.#resetButtonsHandler();
     this.#handleSubmit(CurrentFormView.parseStateToPoint(this._state));
   };
 
   #typeRouteToggleHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({
+    const newData = {
+      ...this._state,
       type: evt.target.value,
-      offers: this.#offerModel.updateOffers(evt.target.value)
-    });
+      offers: this.#offerModel.getOfferByType(this.#offerModel.offers, evt.target.value),
+      destination: this.#pointModel.townModel.getIDByTownName(this._state.destination)};
+    this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    this.updateElement(newData);
     this.#resetButtonsHandler();
   };
 
   #destinationToggleHandler = (evt) => {
     evt.preventDefault();
     const tempID = this.#pointModel.townModel.getIDByTownName(evt.target.value);
-    this.updateElement({
-      townID: tempID,
+    const newData = {...this._state, destination: tempID,
       description: this.#pointModel.townModel.getTownDescByID(tempID),
-      photos: this.#pointModel.townModel.getPhotosByID(tempID)
-    });
+      pictures: this.#pointModel.townModel.getPhotosByID(tempID)};
+    this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    this.updateElement(newData);
     this.#resetButtonsHandler();
   };
 
   #dateFromChangeHandler = ([userDate]) => {
-    this.updateElement({
-      dateFrom: userDate,
-    });
+    const newData = { ...this._state, dateFrom: userDate, destination: this.#pointModel.townModel.getIDByTownName(this._state.destination)
+    };
+    this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    this.updateElement(newData);
     this.#resetButtonsHandler();
   };
 
   #dateToChangeHandler = ([userDate]) => {
-    this.updateElement({
-      dateTo: userDate,
-    });
+    const newData = { ...this._state, dateTo: userDate, destination: this.#pointModel.townModel.getIDByTownName(this._state.destination)
+    };
+    this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    this.updateElement(newData);
     this.#resetButtonsHandler();
   };
 

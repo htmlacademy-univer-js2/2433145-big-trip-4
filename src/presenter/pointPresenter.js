@@ -5,7 +5,6 @@ import OpenFormBtnView from '../view/open-form-button-view.js';
 import CloseFormBtnView from '../view/close-form-button-view.js';
 import SaveFormBtnView from '../view/save-form-btn-view.js';
 import {isEscapeButton} from '../utils/utils.js';
-import OfferModel from '../model/offer-model.js';
 import { UserAction, UpdateType } from '../const.js';
 import DeleteBtnView from '../view/delete-btn-view.js';
 
@@ -24,7 +23,6 @@ export default class PointPresenter {
 
   #pointComponent = null;
   #pointFormComponent = null;
-  #offerModel = new OfferModel('not assigned');
 
   #pointModel = null;
 
@@ -51,7 +49,7 @@ export default class PointPresenter {
       data: this.#point,
       onSubmit: this.#handleFormSubmit,
       pointModel: this.#pointModel,
-      offerModel: this.#offerModel,
+      offerModel: this.#pointModel.offerModel,
       resetButtons: this.resetButtons
     });
     this.#deleteButton = new DeleteBtnView ();
@@ -73,6 +71,7 @@ export default class PointPresenter {
 
     remove(prevFormComponent);
     remove(prevPointComponent);
+    this.resetButtons();
   }
 
   destroy() {
@@ -116,7 +115,7 @@ export default class PointPresenter {
       pictures: this.#pointModel.townModel.getPhotosByID(point.destination),
       description: this.#pointModel.townModel.getTownDescByID(point.destination),
       destination: this.#pointModel.townModel.getTownNameById(point.destination),
-      offers: this.#offerModel.getOfferByType(this.#pointModel.offerModel.offers, point.type),
+      offers: this.#pointModel.offerModel.getOfferByType(this.#pointModel.offerModel.offers, point.type),
     };
   }
 

@@ -63,7 +63,7 @@ function createCurrentFormTemplate (pointForm) {
           &plus;&euro;&nbsp;
           <span class="event__offer-price ">${offer.price}</span>
         </label>
-      </div>`).join('')};
+      </div>`).join('')}
 
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
