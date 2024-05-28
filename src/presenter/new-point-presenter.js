@@ -1,17 +1,25 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import {UserAction, UpdateType} from '../const.js';
 import CurrentFormView from '../view/current-form-view.js';
+import PointPresenter from './pointPresenter.js';
+import DeleteBtnView from '../view/delete-btn-view.js';
 
-export default class NewPointPresenter {
+export default class NewPointPresenter extends PointPresenter{
   #pointListContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
   #pointEditComponent = null;
+  #pointModel = null;
+  #mode = null;
+  #deleteButton = null;
 
-  constructor({pointListContainer, onDataChange, onDestroy}) {
+  constructor(pointListContainer, onDataChange, onModeChange, pointModel, onDestroy) {
+    super(pointListContainer, onDataChange, onModeChange, pointModel);
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
+    this.#pointModel = pointModel;
+    this.#mode = 'EDITING';
   }
 
   init() {
@@ -22,16 +30,20 @@ export default class NewPointPresenter {
     const data = {
       type: 'flight',
       price: 0,
+      offers: {offers: []},
+      pictures: [],
     };
 
     this.#pointEditComponent = new CurrentFormView({
       data: data,
-      onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onSubmit: this.#handleFormSubmit,
+      pointModel: this.#pointModel,
     });
+    this.#deleteButton = new DeleteBtnView();
 
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
-
+    this.resetButtons(this.#mode, this.#pointEditComponent.element, this.#deleteButton);
+    this.#deleteButton.element.addEventListener('click', this.#handleDeleteClick);
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
@@ -52,7 +64,7 @@ export default class NewPointPresenter {
     this.#handleDataChange(
       UserAction.ADD_TASK,
       UpdateType.MINOR,
-      {id: crypto.randomUUID(), ...task},
+      {...task},
     );
     this.destroy();
   };

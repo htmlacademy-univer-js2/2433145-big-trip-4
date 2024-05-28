@@ -26,7 +26,7 @@ export default class PointPresenter {
 
   #pointModel = null;
 
-  constructor ({pointListContainer, onDataChange, onModeChange, pointModel}) {
+  constructor (pointListContainer, onDataChange, onModeChange, pointModel) {
     this.#pointsListView = pointListContainer;
     this.#handlePointChange = onDataChange;
     this.#handleModeChange = onModeChange;
@@ -52,7 +52,7 @@ export default class PointPresenter {
       offerModel: this.#pointModel.offerModel,
       resetButtons: this.resetButtons
     });
-    this.#deleteButton = new DeleteBtnView ();
+    this.#deleteButton = new DeleteBtnView();
 
     if (prevPointComponent === null || prevFormComponent === null) {
       render(this.#pointComponent, this.#pointsListView);
@@ -85,7 +85,7 @@ export default class PointPresenter {
     }
   }
 
-  resetButtons = () => {
+  resetButtons = (mode = this.#mode, place = this.#pointFormComponent.element, deleteButton = this.#deleteButton) => {
     const openButton = new OpenFormBtnView({
       onClick: () => {
         this.#replaceFormToPoint();
@@ -98,11 +98,10 @@ export default class PointPresenter {
         document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
       }});
     const saveButton = new SaveFormBtnView();
-    if (this.#mode === Mode.EDITING) {
-      render(saveButton, this.#pointFormComponent.element.querySelector('.event__field-group--price'), RenderPosition.AFTEREND);
+    if (mode === Mode.EDITING) {
+      render(saveButton, place.querySelector('.event__field-group--price'), RenderPosition.AFTEREND);
       render(closeButton, saveButton.element, RenderPosition.AFTEREND);
-      render(this.#deleteButton, saveButton.element, RenderPosition.AFTEREND);
-
+      render(deleteButton, saveButton.element, RenderPosition.AFTEREND);
     }
     else {
       render(openButton, this.#pointComponent.element, RenderPosition.BEFOREEND);

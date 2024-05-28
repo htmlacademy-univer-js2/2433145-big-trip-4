@@ -22,6 +22,7 @@ export default class BoardPresenter {
   #container = null;
   #pointModel = null;
   #filterModel = null;
+  #resetButtonsHandler = null;
   #pointPresenters = new Map();
   #newPointPresenter = null;
   #currentSortType = SortType.DATE;
@@ -34,11 +35,13 @@ export default class BoardPresenter {
     this.#filterModel = filterModel;
     this.#pointModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
-    this.#newPointPresenter = new NewPointPresenter({
-      pointListContainer: this.#pointsListView.element,
-      onDataChange: this.#handleViewAction,
-      onDestroy: onNewPointDestroy
-    });
+    this.#newPointPresenter = new NewPointPresenter(
+      this.#pointsListView.element,
+      this.#handleViewAction,
+      this.#handleModeChange,
+      this.#pointModel,
+      onNewPointDestroy,
+    );
   }
 
   createPoint() {
@@ -68,12 +71,12 @@ export default class BoardPresenter {
   }
 
   #renderPoint (point) {
-    const pointPresenter = new PointPresenter({
-      pointListContainer: this.#pointsListView.element,
-      onDataChange: this.#handleViewAction,
-      onModeChange: this.#handleModeChange,
-      pointModel: this.#pointModel,
-    });
+    const pointPresenter = new PointPresenter(
+      this.#pointsListView.element,
+      this.#handleViewAction,
+      this.#handleModeChange,
+      this.#pointModel,
+    );
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
   }

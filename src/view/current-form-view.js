@@ -13,7 +13,7 @@ export default class CurrentFormView extends AbstractStatefulView{
   #datepickerTo = null;
   #datepickerFrom = null;
 
-  constructor ({data, onSubmit, pointModel, offerModel, resetButtons}) {
+  constructor ({data, onSubmit, pointModel, resetButtons}) {
     super();
     this._setState(CurrentFormView.parsePointToState(data));
     this.#handleSubmit = onSubmit;
@@ -22,7 +22,6 @@ export default class CurrentFormView extends AbstractStatefulView{
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
-    this.#offerModel = offerModel;
     this.#pointModel = pointModel;
     this.#resetButtonsHandler = resetButtons;
   }
@@ -47,7 +46,7 @@ export default class CurrentFormView extends AbstractStatefulView{
     const newData = {
       ...this._state,
       type: evt.target.value,
-      offers: this.#offerModel.getOfferByType(this.#offerModel.offers, evt.target.value),
+      offers: this.#pointModel.offerModel.getOfferByType(this.#pointModel.offerModel.offers, evt.target.value),
       destination: this.#pointModel.townModel.getIDByTownName(this._state.destination)};
     this.#pointModel.updatePoint(UpdateType.PATCH, newData);
     this.updateElement(newData);
