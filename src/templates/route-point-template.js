@@ -1,7 +1,7 @@
 import {getMonthAndDate, getTime} from '../utils/utils.js';
 
 function createRoutePointTemplate (point) {
-  const offersArr = point.offers;
+  const offersArr = point.offers.offers;
   return `<div class="event">
             <time class="event__date" datetime=${point.dateFrom}>${getMonthAndDate(point.dateFrom)}</time>
             <div class="event__type">

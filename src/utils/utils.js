@@ -49,8 +49,31 @@ function getFullDate(dt) {
 //   return Math.floor(Math.random() * (maximum - minimum) + minimum);
 // }
 
+function sortPointsByPrice(pointA, pointB) {
+  if (pointA.basePrice < pointB.basePrice) {
+    return 1;
+  }
+  if (pointA.basePrice > pointB.basePrice) {
+    return -1;
+  }
+  return 0;
+}
+
+function sortPointsByTime(pointA, pointB) {
+  const durationA = pointA.dateTo - pointA.dateFrom;
+  const durationB = pointB.dateTo - pointB.dateFrom;
+  if (durationA < durationB) {
+    return 1;
+  }
+
+  if (durationA > durationB) {
+    return -1;
+  }
+  return 0;
+}
+
 function isEscapeButton (evt) {
   return evt.key === 'Escape';
 }
 
-export {getDateDiff, getTime, getMonthAndDate, getFullDate, isEscapeButton};
+export {getDateDiff, getTime, getMonthAndDate, getFullDate, isEscapeButton, sortPointsByPrice, sortPointsByTime};

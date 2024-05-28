@@ -25,6 +25,7 @@ export default class PointPresenter {
   #pointComponent = null;
   #pointFormComponent = null;
   #offerModel = new OfferModel('not assigned');
+
   #pointModel = null;
 
   constructor ({pointListContainer, onDataChange, onModeChange, pointModel}) {
@@ -39,6 +40,7 @@ export default class PointPresenter {
 
     const prevPointComponent = this.#pointComponent;
     const prevFormComponent = this.#pointFormComponent;
+    this.#addInfo(this.#point);
 
     this.#pointComponent = new RoutePointView({
       data: this.#point,
@@ -107,6 +109,16 @@ export default class PointPresenter {
       render(openButton, this.#pointComponent.element, RenderPosition.BEFOREEND);
     }
   };
+
+  #addInfo(point) {
+    this.#point = {
+      ...point,
+      pictures: this.#pointModel.townModel.getPhotosByID(point.destination),
+      description: this.#pointModel.townModel.getTownDescByID(point.destination),
+      destination: this.#pointModel.townModel.getTownNameById(point.destination),
+      offers: this.#offerModel.getOfferByType(this.#pointModel.offerModel.offers, point.type),
+    };
+  }
 
   #replacePointToForm() {
     replace(this.#pointComponent, this.#pointFormComponent);

@@ -1,5 +1,5 @@
-import TownModel from '../model/town-model.js';
-import OfferModel from '../model/offer-model.js';
+// import TownModel from '../model/town-model.js';
+// import OfferModel from '../model/offer-model.js';
 import Observable from '../framework/observable.js';
 import {UpdateType} from '../const.js';
 import { getDateDiff } from '../utils/utils.js';
@@ -7,19 +7,20 @@ import { getDateDiff } from '../utils/utils.js';
 
 export default class PointModel extends Observable{
   townModel = null;
-  #offerModel = null;
+  offerModel = null;
   #towns = null;
   #offers = null;
   #points = null;
   #pointsApiService = null;
 
-  constructor (pointsApiService) {
+  constructor ({pointsApiService, townModel, offerModel}) {
     super();
-
     this.#pointsApiService = pointsApiService;
-    this.#offerModel = new OfferModel(this.#pointsApiService);
-    this.townModel = new TownModel(this.#pointsApiService);
-    this.#offerModel.init();
+    this.offerModel = offerModel;
+    this.townModel = townModel;
+    // this.#offerModel = new OfferModel(this.#pointsApiService);
+    // this.#townModel = new TownModel(this.#pointsApiService);
+    this.offerModel.init();
     this.townModel.init();
     this.#towns = this.townModel.towns;
     this.#points = [];

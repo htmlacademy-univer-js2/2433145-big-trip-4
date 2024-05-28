@@ -7,7 +7,7 @@ import PointPresenter from './pointPresenter.js';
 import {filter} from '../utils/filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import SortItemView from '../view/sort-item-view.js';
-import {sortPointsByPrice, sortPointsByTime} from '../mock/point.js';
+import {sortPointsByPrice, sortPointsByTime} from '../utils/utils.js';
 import NewPointPresenter from '../presenter/new-point-presenter.js';
 import LoadingView from '../view/loading-view.js';
 
@@ -72,7 +72,7 @@ export default class BoardPresenter {
       pointListContainer: this.#pointsListView.element,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
-      pointModel: this.#pointModel
+      pointModel: this.#pointModel,
     });
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);

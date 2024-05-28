@@ -11,9 +11,9 @@ export default class TownModel extends Observable{
     this.#pointsApiService = pointsApiService;
   }
 
-  init() {
+  async init() {
     try {
-      const destinations = this.#pointsApiService.destinations;
+      const destinations = await this.#pointsApiService.destinations;
       this.#destinations = destinations;
     } catch(err) {
       this.#destinations = [];
@@ -49,7 +49,7 @@ export default class TownModel extends Observable{
     let temp = '';
     this.#destinations.forEach((town) => {
       if (town.id === id) {
-        temp = town.photos;
+        temp = town.pictures;
       }
     });
     return temp;
