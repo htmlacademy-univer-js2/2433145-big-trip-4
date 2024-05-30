@@ -153,8 +153,10 @@ export default class BoardPresenter {
     if (pointsCount > 0) {
       render(this.#pointsListView, this.#container);
       const townsArr = [];
+      let totalPrice = 0;
       for (let i = 0; i < this.points.length; i++) {
         townsArr.push(this.points[i].destination);
+        totalPrice += this.points[i].basePrice;
         this.#renderPoint(this.points[i]);
       }
       const uniqueTowns = Array.from(new Set(townsArr));
@@ -162,7 +164,7 @@ export default class BoardPresenter {
       const secondTown = pointsCount > 3 ? '...' : this.#pointModel.townModel.getTownNameById(uniqueTowns[1]);
       const thirdTown = this.#pointModel.townModel.getTownNameById(uniqueTowns[uniqueTowns.length - 1]);
       if (!this.#mainTrip) {
-        this.#mainTrip = new MainTripView(firstTown, secondTown, thirdTown);
+        this.#mainTrip = new MainTripView(firstTown, secondTown, thirdTown, totalPrice, this.points[0].dateFrom, this.points[pointsCount - 1].dateTo);
         render(this.#mainTrip, this.#tripControls, RenderPosition.BEFOREBEGIN);
       }
     }
