@@ -22,7 +22,7 @@ export default class BoardPresenter {
   #container = null;
   #pointModel = null;
   #filterModel = null;
-  #resetButtonsHandler = null;
+  // #resetButtonsHandler = null;
   #pointPresenters = new Map();
   #newPointPresenter = null;
   #currentSortType = SortType.DATE;
@@ -161,12 +161,15 @@ export default class BoardPresenter {
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
+        this.#pointPresenters.get(update.id).setSaving();
         this.#pointModel.updatePoint(updateType, update);
         break;
       case UserAction.ADD_POINT:
+        this.#newPointPresenter.setSaving();
         this.#pointModel.addPoint(updateType, update);
         break;
       case UserAction.DELETE_POINT:
+        this.#pointPresenters.get(update.id).setDeleting();
         this.#pointModel.deletePoint(updateType, update);
         break;
     }

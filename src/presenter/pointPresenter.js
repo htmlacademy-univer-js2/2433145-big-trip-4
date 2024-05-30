@@ -51,7 +51,6 @@ export default class PointPresenter {
       onSubmit: this.#handleFormSubmit,
       pointModel: this.#pointModel,
       resetButtons: this.resetButtons,
-      deleteComponent: null
     });
     this.#deleteButton = new DeleteBtnView();
 
@@ -67,12 +66,14 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointFormComponent, prevFormComponent);
+      // replace(this.#pointFormComponent, prevFormComponent);
+      replace(this.#pointComponent, prevFormComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevFormComponent);
     remove(prevPointComponent);
-    this.resetButtons();
+    // this.resetButtons();
   }
 
   destroy() {
@@ -82,9 +83,29 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+
       this.#replacePointToForm();
     }
   }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointFormComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointFormComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
 
   resetButtons = (mode = this.#mode, place = this.#pointFormComponent.element, deleteButton = this.#deleteButton) => {
     const openButton = new OpenFormBtnView({
@@ -119,7 +140,11 @@ export default class PointPresenter {
   }
 
   #replacePointToForm() {
+    const saveButton = this.#pointFormComponent.element.querySelector('.event__save-btn');
+    const closeButton = this.#pointFormComponent.element.querySelector('.close-form-btn');
     replace(this.#pointComponent, this.#pointFormComponent);
+    saveButton.remove();
+    closeButton.remove();
     this.#mode = Mode.DEFAULT;
   }
 

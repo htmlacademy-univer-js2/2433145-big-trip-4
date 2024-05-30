@@ -6,8 +6,8 @@ import { getDateDiff } from '../utils/utils.js';
 export default class PointModel extends Observable{
   townModel = null;
   offerModel = null;
-  #towns = null;
-  #offers = null;
+  // #towns = null;
+  // #offers = null;
   #points = null;
   #pointsApiService = null;
 
@@ -18,7 +18,7 @@ export default class PointModel extends Observable{
     this.townModel = townModel;
     this.offerModel.init();
     this.townModel.init();
-    this.#towns = this.townModel.towns;
+    // this.#towns = this.townModel.towns;
     this.#points = [];
   }
 

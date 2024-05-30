@@ -32,8 +32,9 @@ export default class CurrentFormView extends AbstractStatefulView{
 
   #submitHandler = (evt) => {
     evt.preventDefault();
+    const tempID = this._state.destination;
     const newData = { ...this._state,
-      destination: this.#pointModel.townModel.getIDByTownName(this._state.destination)
+      destination: tempID
     };
     if ('id' in this._state) {
       this.#pointModel.updatePoint(UpdateType.MINOR, newData);
@@ -53,9 +54,9 @@ export default class CurrentFormView extends AbstractStatefulView{
       type: evt.target.value,
       offers: this.#pointModel.offerModel.getOfferByType(this.#pointModel.offerModel.offers, evt.target.value),
       destination: this._state.destination};
-    if ('id' in this._state) {
-      this.#pointModel.updatePoint(UpdateType.PATCH, newData);
-    }
+    // if ('id' in this._state) {
+    //   this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    // }
     this.updateElement(newData);
     this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
@@ -66,9 +67,9 @@ export default class CurrentFormView extends AbstractStatefulView{
     const newData = {...this._state, destination: tempID,
       description: this.#pointModel.townModel.getTownDescByID(tempID),
       pictures: this.#pointModel.townModel.getPhotosByID(tempID)};
-    if ('id' in this._state) {
-      this.#pointModel.updatePoint(UpdateType.PATCH, newData);
-    }
+    // if ('id' in this._state) {
+    //   this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    // }
     this.updateElement(newData);
     this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };

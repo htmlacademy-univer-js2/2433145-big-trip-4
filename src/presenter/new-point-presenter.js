@@ -68,13 +68,20 @@ export default class NewPointPresenter extends PointPresenter{
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#pointEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_TASK,
       UpdateType.MINOR,
       {...point},
     );
-    this.destroy();
+    // this.destroy();
   };
 
   #handleDeleteClick = () => {
