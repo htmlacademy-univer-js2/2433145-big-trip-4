@@ -43,14 +43,15 @@ export default class PointPresenter {
     this.#pointComponent = new RoutePointView({
       data: this.#point,
       onFavouriteClick: this.#handleFavouriteClick,
+      pointModel: this.#pointModel
     });
 
     this.#pointFormComponent = new CurrentFormView({
       data: this.#point,
       onSubmit: this.#handleFormSubmit,
       pointModel: this.#pointModel,
-      offerModel: this.#pointModel.offerModel,
-      resetButtons: this.resetButtons
+      resetButtons: this.resetButtons,
+      deleteComponent: null
     });
     this.#deleteButton = new DeleteBtnView();
 
@@ -112,8 +113,7 @@ export default class PointPresenter {
     this.#point = {
       ...point,
       pictures: this.#pointModel.townModel.getPhotosByID(point.destination),
-      description: this.#pointModel.townModel.getTownDescByID(point.destination),
-      destination: this.#pointModel.townModel.getTownNameById(point.destination),
+      destination: point.destination,
       offers: this.#pointModel.offerModel.getOfferByType(this.#pointModel.offerModel.offers, point.type),
     };
   }

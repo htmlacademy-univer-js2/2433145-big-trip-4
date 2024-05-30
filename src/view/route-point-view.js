@@ -4,16 +4,18 @@ import { createRoutePointTemplate } from '../templates/route-point-template.js';
 export default class RoutePointView extends AbstractView{
   #point = null;
   #favButtonClick = null;
+  #pointModel = null;
 
-  constructor ({data, onFavouriteClick}) {
+  constructor ({data, onFavouriteClick, pointModel}) {
     super();
     this.#point = data;
     this.#favButtonClick = onFavouriteClick;
+    this.#pointModel = pointModel;
     this.element.querySelector('.event__favorite-icon').addEventListener('click', this.#clickFavBtnHandler);
   }
 
   get template() {
-    return createRoutePointTemplate(this.#point);
+    return createRoutePointTemplate(this.#point, this.#pointModel.townModel);
   }
 
   #clickFavBtnHandler = (evt) => {

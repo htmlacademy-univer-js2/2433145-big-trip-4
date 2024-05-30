@@ -4,17 +4,17 @@ import { createCurrentFormTemplate } from '../templates/current-form-template.js
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-//лучше по имени переделывать отображение в форме, нежели чем да
 export default class CurrentFormView extends AbstractStatefulView{
   #handleSubmit = null;
   #resetButtonsHandler = null;
-  #offerModel = null;
   #pointModel = null;
   #datepickerTo = null;
   #datepickerFrom = null;
+  #deleteButton = null;
 
-  constructor ({data, onSubmit, pointModel, resetButtons}) {
+  constructor ({data, onSubmit, pointModel, resetButtons, deleteComponent}) {
     super();
+    this.#pointModel = pointModel;
     this._setState(CurrentFormView.parsePointToState(data));
     this.#handleSubmit = onSubmit;
     this.element.querySelector('form').addEventListener('submit', this.#submitHandler);
@@ -22,12 +22,12 @@ export default class CurrentFormView extends AbstractStatefulView{
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
-    this.#pointModel = pointModel;
     this.#resetButtonsHandler = resetButtons;
+    this.#deleteButton = deleteComponent;
   }
 
   get template() {
-    return createCurrentFormTemplate(this._state);
+    return createCurrentFormTemplate(this._state, this.#pointModel.townModel);
   }
 
   #submitHandler = (evt) => {
@@ -35,7 +35,12 @@ export default class CurrentFormView extends AbstractStatefulView{
     const newData = { ...this._state,
       destination: this.#pointModel.townModel.getIDByTownName(this._state.destination)
     };
-    this.#pointModel.updatePoint(UpdateType.MINOR, newData);
+    if ('id' in this._state) {
+      this.#pointModel.updatePoint(UpdateType.MINOR, newData);
+    }
+    else {
+      this.#pointModel.addPoint(UpdateType.MINOR, newData);
+    }
     this.updateElement(newData);
     this.#resetButtonsHandler();
     this.#handleSubmit(CurrentFormView.parseStateToPoint(this._state));
@@ -47,10 +52,12 @@ export default class CurrentFormView extends AbstractStatefulView{
       ...this._state,
       type: evt.target.value,
       offers: this.#pointModel.offerModel.getOfferByType(this.#pointModel.offerModel.offers, evt.target.value),
-      destination: this.#pointModel.townModel.getIDByTownName(this._state.destination)};
-    this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+      destination: this._state.destination};
+    if ('id' in this._state) {
+      this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    }
     this.updateElement(newData);
-    this.#resetButtonsHandler();
+    this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
 
   #destinationToggleHandler = (evt) => {
@@ -59,25 +66,31 @@ export default class CurrentFormView extends AbstractStatefulView{
     const newData = {...this._state, destination: tempID,
       description: this.#pointModel.townModel.getTownDescByID(tempID),
       pictures: this.#pointModel.townModel.getPhotosByID(tempID)};
-    this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    if ('id' in this._state) {
+      this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    }
     this.updateElement(newData);
-    this.#resetButtonsHandler();
+    this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
 
   #dateFromChangeHandler = ([userDate]) => {
     const newData = { ...this._state, dateFrom: userDate, destination: this.#pointModel.townModel.getIDByTownName(this._state.destination)
     };
-    this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    if ('id' in this._state) {
+      this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    }
     this.updateElement(newData);
-    this.#resetButtonsHandler();
+    this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
 
   #dateToChangeHandler = ([userDate]) => {
     const newData = { ...this._state, dateTo: userDate, destination: this.#pointModel.townModel.getIDByTownName(this._state.destination)
     };
-    this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    if ('id' in this._state) {
+      this.#pointModel.updatePoint(UpdateType.PATCH, newData);
+    }
     this.updateElement(newData);
-    this.#resetButtonsHandler();
+    this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
 
   #setDatepickerFrom() {
@@ -103,11 +116,18 @@ export default class CurrentFormView extends AbstractStatefulView{
   }
 
   static parsePointToState(point) {
-    return {...point};
+    return {...point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false
+    };
   }
 
   static parseStateToPoint(state) {
     const point = {...state};
+    delete point.isDeleting;
+    delete point.isSaving;
+    delete point.isDisabled;
     return point;
   }
 
