@@ -106,6 +106,23 @@ export default class PointPresenter {
     }
   }
 
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#pointFormComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointFormComponent.shake(resetFormState);
+  }
+
 
   resetButtons = (mode = this.#mode, place = this.#pointFormComponent.element, deleteButton = this.#deleteButton) => {
     const openButton = new OpenFormBtnView({
