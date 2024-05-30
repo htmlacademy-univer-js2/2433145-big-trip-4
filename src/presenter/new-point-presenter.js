@@ -29,7 +29,7 @@ export default class NewPointPresenter extends PointPresenter{
 
     const data = {
       type: 'flight',
-      basePrice: 0,
+      basePrice: 1,
       offers: {offers: [
         {id: '60f8e796-c719-4bba-a845-507fc2c20e6d', title: 'Choose meal', price: 140},
         {id: '98dfafcf-5613-45f1-867a-7045c4292e8e', title: 'Choose seats', price: 173},
@@ -38,6 +38,9 @@ export default class NewPointPresenter extends PointPresenter{
         {id: 'b837a4c4-5559-4751-a18d-2bb09f8c6ec9', title: 'Add luggage', price: 52},
         {id: 'b57ad935-0c5b-45d4-b76a-4870b6ac208c', title: 'Business lounge', price: 166}]},
       pictures: [],
+      isFavorite: true,
+      dateFrom: new Date(2024, 5, 30),
+      dateTo: new Date(2024, 5, 31),
     };
 
     this.#deleteButton = new DeleteBtnView();
@@ -88,6 +91,7 @@ export default class NewPointPresenter extends PointPresenter{
   }
 
   #handleFormSubmit = (point) => {
+    this.resetButtons(this.#mode, this.#pointEditComponent.element, this.#deleteButton);
     this.#handleDataChange(
       UserAction.ADD_TASK,
       UpdateType.MINOR,

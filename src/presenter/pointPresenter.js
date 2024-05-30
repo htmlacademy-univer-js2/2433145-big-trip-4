@@ -66,14 +66,12 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      // replace(this.#pointFormComponent, prevFormComponent);
       replace(this.#pointComponent, prevFormComponent);
       this.#mode = Mode.DEFAULT;
     }
 
     remove(prevFormComponent);
     remove(prevPointComponent);
-    // this.resetButtons();
   }
 
   destroy() {
@@ -122,7 +120,6 @@ export default class PointPresenter {
 
     this.#pointFormComponent.shake(resetFormState);
   }
-
 
   resetButtons = (mode = this.#mode, place = this.#pointFormComponent.element, deleteButton = this.#deleteButton) => {
     const openButton = new OpenFormBtnView({
