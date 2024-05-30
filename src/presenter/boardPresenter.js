@@ -24,9 +24,9 @@ export default class BoardPresenter {
   #isLoading = true;
   #sortComponent = null;
   #noPointsComponent = null;
-  #mainTrip = new MainTripView();
   #container = null;
   #pointModel = null;
+  #mainTrip = null;
   #filterModel = null;
   #pointPresenters = new Map();
   #newPointPresenter = null;
@@ -127,6 +127,8 @@ export default class BoardPresenter {
   }
 
   #clearPointsList({resetSortType = false} = {}) {
+    remove(this.#mainTrip);
+    this.#mainTrip = null;
     this.#newPointPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
@@ -149,10 +151,19 @@ export default class BoardPresenter {
     }
     const pointsCount = this.points.length;
     if (pointsCount > 0) {
-      render(this.#mainTrip, this.#tripControls, RenderPosition.BEFOREBEGIN);
       render(this.#pointsListView, this.#container);
+      const townsArr = [];
       for (let i = 0; i < this.points.length; i++) {
+        townsArr.push(this.points[i].destination);
         this.#renderPoint(this.points[i]);
+      }
+      const uniqueTowns = Array.from(new Set(townsArr));
+      const firstTown = this.#pointModel.townModel.getTownNameById(uniqueTowns[0]);
+      const secondTown = pointsCount > 3 ? '...' : this.#pointModel.townModel.getTownNameById(uniqueTowns[1]);
+      const thirdTown = this.#pointModel.townModel.getTownNameById(uniqueTowns[uniqueTowns.length - 1]);
+      if (!this.#mainTrip) {
+        this.#mainTrip = new MainTripView(firstTown, secondTown, thirdTown);
+        render(this.#mainTrip, this.#tripControls, RenderPosition.BEFOREBEGIN);
       }
     }
     else {

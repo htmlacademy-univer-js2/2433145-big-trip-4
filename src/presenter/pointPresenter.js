@@ -20,7 +20,6 @@ export default class PointPresenter {
   #point = null;
   #mode = Mode.DEFAULT;
   #deleteButton = null;
-
   #pointComponent = null;
   #pointFormComponent = null;
 
@@ -39,7 +38,6 @@ export default class PointPresenter {
     const prevPointComponent = this.#pointComponent;
     const prevFormComponent = this.#pointFormComponent;
     this.#addInfo(this.#point);
-
     this.#pointComponent = new RoutePointView({
       data: this.#point,
       onFavouriteClick: this.#handleFavouriteClick,
