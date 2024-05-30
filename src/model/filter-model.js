@@ -12,4 +12,8 @@ export default class FilterModel extends Observable {
     this.#filter = filter;
     this._notify(updateType, filter);
   }
+
+  setSort(updateType, sort) {
+    this._notify(updateType, sort);
+  }
 }

@@ -2,7 +2,7 @@ import {remove, render, RenderPosition} from '../framework/render.js';
 import {UserAction, UpdateType} from '../const.js';
 import CurrentFormView from '../view/current-form-view.js';
 import PointPresenter from './pointPresenter.js';
-import DeleteBtnView from '../view/delete-btn-view.js';
+import CancelBtnView from '../view/cancel-form-button-view.js';
 
 export default class NewPointPresenter extends PointPresenter{
   #pointListContainer = null;
@@ -29,7 +29,7 @@ export default class NewPointPresenter extends PointPresenter{
 
     const data = {
       type: 'flight',
-      basePrice: 1,
+      basePrice: 0,
       offers: {offers: [
         {id: '60f8e796-c719-4bba-a845-507fc2c20e6d', title: 'Choose meal', price: 140},
         {id: '98dfafcf-5613-45f1-867a-7045c4292e8e', title: 'Choose seats', price: 173},
@@ -43,7 +43,7 @@ export default class NewPointPresenter extends PointPresenter{
       dateTo: new Date(2024, 5, 31),
     };
 
-    this.#deleteButton = new DeleteBtnView();
+    this.#deleteButton = new CancelBtnView();
     this.#pointEditComponent = new CurrentFormView({
       data: data,
       onSubmit: this.#handleFormSubmit,
