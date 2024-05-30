@@ -37,9 +37,6 @@ export default class CurrentFormView extends AbstractStatefulView{
     const newData = { ...this._state,
       destination: tempID
     };
-    if (!('id' in newData)) {
-      this.#pointModel.addPoint(UpdateType.MINOR, newData);
-    }
     this.#handleSubmit(CurrentFormView.parseStateToPoint(this._state));
     this.updateElement(newData);
     if ('id' in newData) {

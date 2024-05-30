@@ -93,7 +93,7 @@ export default class NewPointPresenter extends PointPresenter{
   #handleFormSubmit = (point) => {
     this.resetButtons(this.#mode, this.#pointEditComponent.element, this.#deleteButton);
     this.#handleDataChange(
-      UserAction.ADD_TASK,
+      UserAction.ADD_POINT,
       UpdateType.MINOR,
       {...point},
     );

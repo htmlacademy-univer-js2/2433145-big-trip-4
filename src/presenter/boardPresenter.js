@@ -183,7 +183,6 @@ export default class BoardPresenter {
 
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
-
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointPresenters.get(update.id).setSaving();
@@ -196,7 +195,7 @@ export default class BoardPresenter {
       case UserAction.ADD_POINT:
         this.#newPointPresenter.setSaving();
         try {
-          this.#pointModel.addPoint(updateType, update);
+          await this.#pointModel.addPoint(updateType, update);
         } catch (err) {
           this.#newPointPresenter.setAborting();
         }
@@ -204,7 +203,7 @@ export default class BoardPresenter {
       case UserAction.DELETE_POINT:
         this.#pointPresenters.get(update.id).setDeleting();
         try {
-          this.#pointModel.deletePoint(updateType, update);
+          await this.#pointModel.deletePoint(updateType, update);
         } catch (err) {
           this.#pointPresenters.get(update.id).setAborting();
         }
