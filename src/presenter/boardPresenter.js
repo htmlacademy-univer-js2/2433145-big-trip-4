@@ -11,6 +11,7 @@ import {sortPointsByPrice, sortPointsByTime} from '../utils/utils.js';
 import NewPointPresenter from '../presenter/new-point-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+// import dayjs from 'dayjs';
 
 const TimeLimit = {
   LOWER_LIMIT: 350,
@@ -27,6 +28,9 @@ export default class BoardPresenter {
   #container = null;
   #pointModel = null;
   #mainTrip = null;
+  // #futureCount = 0;
+  // #pastCount = 0;
+  // #presentCount = 0;
   #filterModel = null;
   #pointPresenters = new Map();
   #newPointPresenter = null;
@@ -153,6 +157,7 @@ export default class BoardPresenter {
     if (pointsCount > 0) {
       render(this.#pointsListView, this.#container);
       const townsArr = [];
+      // const currentDate = dayjs();
       let totalPrice = 0;
       for (let i = 0; i < this.points.length; i++) {
         townsArr.push(this.points[i].destination);

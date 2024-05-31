@@ -6,7 +6,6 @@ export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #pointModel = null;
-
   #filterComponent = null;
 
   constructor({filterContainer, filterModel, pointModel}) {
@@ -25,11 +24,12 @@ export default class FilterPresenter {
   init() {
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
-
+    const filterElementsCounts = this.#pointModel.countFilteredPoints();
     this.#filterComponent = new FilterFormView({
       filters,
       currentFilterType: this.#filterModel.filter,
-      onFilterTypeChange: this.#handleFilterTypeChange
+      onFilterTypeChange: this.#handleFilterTypeChange,
+      filterElementsCounts: filterElementsCounts
     });
 
     if (prevFilterComponent === null) {

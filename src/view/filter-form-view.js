@@ -5,13 +5,14 @@ export default class FilterFormView extends AbstractView{
   #filters = null;
   #currentFilter = null;
   #handleFilterTypeChange = null;
+  #filterElementsCounts = null;
 
-  constructor ({filters, currentFilterType, onFilterTypeChange}){
+  constructor ({filters, currentFilterType, onFilterTypeChange, filterElementsCounts}){
     super();
     this.#filters = filters;
     this.#currentFilter = currentFilterType;
     this.#handleFilterTypeChange = onFilterTypeChange;
-
+    this.#filterElementsCounts = filterElementsCounts;
     this.element.addEventListener('change', this.#filterTypeChangeHandler);
   }
 
@@ -21,6 +22,6 @@ export default class FilterFormView extends AbstractView{
   };
 
   get template() {
-    return createFilterFormTemplate(this.#filters, this.#currentFilter);
+    return createFilterFormTemplate(this.#filters, this.#currentFilter, this.#filterElementsCounts);
   }
 }

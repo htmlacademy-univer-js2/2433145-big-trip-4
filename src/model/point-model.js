@@ -1,6 +1,7 @@
 import Observable from '../framework/observable.js';
 import {UpdateType} from '../const.js';
 import { getDateDiff } from '../utils/utils.js';
+import dayjs from 'dayjs';
 
 
 export default class PointModel extends Observable{
@@ -27,6 +28,25 @@ export default class PointModel extends Observable{
       this.#points = [];
     }
     this._notify(UpdateType.INIT);
+  }
+
+  countFilteredPoints() {
+    const filterElementsCounts = {
+      present: 0,
+      past: 0,
+      future: 0
+    };
+    const currentDate = dayjs();
+    this.#points.forEach((point) => {
+      if (point.dateTo < currentDate) {
+        filterElementsCounts.past += 1;
+      } else if (point.dateFrom < currentDate) {
+        filterElementsCounts.present += 1;
+      } else {
+        filterElementsCounts.future += 1;
+      }
+    });
+    return filterElementsCounts;
   }
 
   async updatePoint(updateType, update) {
