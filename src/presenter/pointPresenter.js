@@ -143,12 +143,20 @@ export default class PointPresenter {
   };
 
   #addInfo(point) {
+    const checkedOffers = point.offers;
     this.#point = {
       ...point,
       pictures: this.#pointModel.townModel.getPhotosByID(point.destination),
       destination: point.destination,
       offers: this.#pointModel.offerModel.getOfferByType(this.#pointModel.offerModel.offers, point.type),
     };
+    checkedOffers.map((offerID) => {
+      this.#point.offers.offers.forEach((offer) => {
+        if(offer.id === offerID) {
+          offer.isChecked = true;
+        }
+      });
+    });
   }
 
   #replacePointToForm() {
@@ -179,7 +187,6 @@ export default class PointPresenter {
       UpdateType.MINOR,
       update
     );
-    this.#replaceFormToPoint();
   };
 
   #handleDeleteClick = (point) => {

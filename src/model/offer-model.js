@@ -27,7 +27,6 @@ export default class OfferModel extends Observable{
 
   getOfferByType(offersArr, type) {
     let temp = '';
-    // console.log(offersArr);
     offersArr.forEach((offer) => {
       if (offer.type === type) {
         temp = offer;
@@ -40,10 +39,4 @@ export default class OfferModel extends Observable{
     this.offersIds = offersArr.map((offer) => offer.id);
     return this.offersIds;
   }
-
-  // updateOffers(newType) {
-  //   console.log(this.#offers);
-  //   console.log(this.getOfferByType(this.#offers, newType));
-  //   return this.getOfferByType(this.#offers, newType);
-  // }
 }

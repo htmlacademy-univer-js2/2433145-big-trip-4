@@ -21,6 +21,10 @@ export default class CurrentFormView extends AbstractStatefulView{
     this.element.querySelector('.event__type-list').addEventListener('change', this.#typeRouteToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceToggleHandler);
+    const offersArr = this.element.querySelectorAll('.event__offer-selector');
+    for (let i = 0; i < offersArr.length; i++) {
+      offersArr[i].addEventListener('change', this.#offersToggleHandler);
+    }
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
     this.#resetButtonsHandler = resetButtons;
@@ -34,14 +38,40 @@ export default class CurrentFormView extends AbstractStatefulView{
   #submitHandler = (evt) => {
     evt.preventDefault();
     const tempID = this._state.destination;
+    const tempOffersIDs = [];
+    this._state.offers.offers.forEach((offer) => {
+      if (offer.isChecked === true) {
+        tempOffersIDs.push(offer.id);
+      }
+    });
     const newData = { ...this._state,
-      destination: tempID
+      destination: tempID,
+      offers: tempOffersIDs
     };
-    this.#handleSubmit(CurrentFormView.parseStateToPoint(this._state));
-    this.updateElement(newData);
+    this.#handleSubmit(CurrentFormView.parseStateToPoint(newData));
     if ('id' in newData) {
       this.#resetButtonsHandler();
     }
+  };
+
+  #offersToggleHandler = (evt) => {
+    evt.preventDefault();
+    const name = evt.target.name.replace('event-offer-','');
+    const result = name.charAt(0).toUpperCase() + name.slice(1);
+    const newOffers = [...this._state.offers.offers];
+    newOffers.map((offer) => {
+      if (offer.title === result) {
+        offer.isChecked = !offer.isChecked;
+      }
+    });
+    const newData = { ...this._state,
+      offers: {
+        type: this._state.type,
+        offers: newOffers
+      }
+    };
+    this.updateElement(newData);
+    this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
 
   #typeRouteToggleHandler = (evt) => {
