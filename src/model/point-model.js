@@ -3,7 +3,6 @@ import {UPDATE_TYPE} from '../const.js';
 import { getDateDiff } from '../utils/utils.js';
 import dayjs from 'dayjs';
 
-
 export default class PointModel extends Observable{
   townModel = null;
   offerModel = null;
