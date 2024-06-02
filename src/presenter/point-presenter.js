@@ -5,7 +5,7 @@ import OpenFormBtnView from '../view/open-form-button-view.js';
 import CloseFormBtnView from '../view/close-form-button-view.js';
 import SaveFormBtnView from '../view/save-form-btn-view.js';
 import {isEscapeButton} from '../utils/utils.js';
-import { UserAction, UpdateType } from '../const.js';
+import { USER_ACTION, UPDATE_TYPE } from '../const.js';
 import DeleteBtnView from '../view/delete-btn-view.js';
 
 const Mode = {
@@ -22,14 +22,15 @@ export default class PointPresenter {
   #deleteButton = null;
   #pointComponent = null;
   #pointFormComponent = null;
-
+  #totalPrice = null;
   #pointModel = null;
 
-  constructor (pointListContainer, onDataChange, onModeChange, pointModel) {
+  constructor (pointListContainer, onDataChange, onModeChange, pointModel, totalPrice) {
     this.#pointsListView = pointListContainer;
     this.#handlePointChange = onDataChange;
     this.#handleModeChange = onModeChange;
     this.#pointModel = pointModel;
+    this.#totalPrice = totalPrice;
   }
 
   init(point) {
@@ -49,6 +50,7 @@ export default class PointPresenter {
       onSubmit: this.#handleFormSubmit,
       pointModel: this.#pointModel,
       resetButtons: this.resetButtons,
+      totalPrice: this.#totalPrice
     });
     this.#deleteButton = new DeleteBtnView();
 
@@ -176,23 +178,23 @@ export default class PointPresenter {
 
   #handleFavouriteClick = () => {
     this.#handlePointChange(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
+      USER_ACTION.UPDATE_POINT,
+      UPDATE_TYPE.MINOR,
       {...this.#point, isFavorite: !this.#point.isFavorite});
   };
 
   #handleFormSubmit = (update) => {
     this.#handlePointChange(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
+      USER_ACTION.UPDATE_POINT,
+      UPDATE_TYPE.MINOR,
       update
     );
   };
 
   #handleDeleteClick = (point) => {
     this.#handlePointChange(
-      UserAction.DELETE_POINT,
-      UpdateType.MINOR,
+      USER_ACTION.DELETE_POINT,
+      UPDATE_TYPE.MINOR,
       point
     );
   };

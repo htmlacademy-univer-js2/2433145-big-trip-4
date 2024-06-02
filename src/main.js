@@ -1,7 +1,7 @@
-import BoardPresenter from './presenter/boardPresenter.js';
+import BoardPresenter from './presenter/board-presenter.js';
 import PointModel from './model/point-model.js';
 import TownModel from './model/town-model.js';
-import FilterPresenter from './presenter/filterPresenter.js';
+import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filter-model.js';
 import NewPointButtonView from './view/new-point-button-view.js';
 import { RenderPosition, render } from './framework/render.js';

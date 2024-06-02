@@ -1,5 +1,5 @@
 import Observable from '../framework/observable.js';
-import {UpdateType} from '../const.js';
+import {UPDATE_TYPE} from '../const.js';
 import { getDateDiff } from '../utils/utils.js';
 import dayjs from 'dayjs';
 
@@ -27,7 +27,7 @@ export default class PointModel extends Observable{
     } catch(err) {
       this.#points = [];
     }
-    this._notify(UpdateType.INIT);
+    this._notify(UPDATE_TYPE.INIT);
   }
 
   countFilteredPoints() {

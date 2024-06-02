@@ -1,6 +1,6 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilterFormView from '../view/filter-form-view.js';
-import {FilterType, UpdateType} from '../const.js';
+import {FILTER_TYPE, UPDATE_TYPE} from '../const.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
@@ -18,7 +18,7 @@ export default class FilterPresenter {
   }
 
   get filters() {
-    return Object.values(FilterType).map((type) => type);
+    return Object.values(FILTER_TYPE).map((type) => type);
   }
 
   init() {
@@ -50,6 +50,6 @@ export default class FilterPresenter {
       return;
     }
 
-    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this.#filterModel.setFilter(UPDATE_TYPE.MAJOR, filterType);
   };
 }

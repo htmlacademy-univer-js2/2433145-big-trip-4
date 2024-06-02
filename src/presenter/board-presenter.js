@@ -3,15 +3,14 @@ import SortFormView from '../view/sort-form-view.js';
 import { RenderPosition, render, remove } from '../framework/render.js';
 import NoPointsView from '../view/no-points-view.js';
 import MainTripView from '../view/main-trip-view.js';
-import PointPresenter from './pointPresenter.js';
+import PointPresenter from './point-presenter.js';
 import {filter} from '../utils/filter.js';
-import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
+import { SORT_TYPE, UPDATE_TYPE, USER_ACTION, FILTER_TYPE } from '../const.js';
 import SortItemView from '../view/sort-item-view.js';
 import {sortPointsByPrice, sortPointsByTime} from '../utils/utils.js';
-import NewPointPresenter from '../presenter/new-point-presenter.js';
+import NewPointPresenter from './new-point-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
-// import dayjs from 'dayjs';
 
 const TimeLimit = {
   LOWER_LIMIT: 350,
@@ -28,11 +27,12 @@ export default class BoardPresenter {
   #container = null;
   #pointModel = null;
   #mainTrip = null;
+  #totalPrice = null;
   #filterModel = null;
   #pointPresenters = new Map();
   #newPointPresenter = null;
-  #currentSortType = SortType.DATE;
-  #filterType = FilterType.EVERYTHING;
+  #currentSortType = SORT_TYPE.DATE;
+  #filterType = FILTER_TYPE.EVERYTHING;
   #tripControls = document.querySelector('.trip-main__trip-controls');
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
@@ -55,9 +55,8 @@ export default class BoardPresenter {
   }
 
   createPoint() {
-    this.#currentSortType = SortType.DATE;
-    this.#filterModel.setSort(UpdateType.MAJOR, this.#currentSortType);
-    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#currentSortType = SORT_TYPE.DATE;
+    this.#filterModel.setFilter(UPDATE_TYPE.MAJOR, FILTER_TYPE.EVERYTHING);
     this.#newPointPresenter.init();
   }
 
@@ -66,9 +65,9 @@ export default class BoardPresenter {
     const points = this.#pointModel.points;
     const filteredPoints = filter[this.#filterType](points);
     switch(this.#currentSortType) {
-      case SortType.PRICE:
+      case SORT_TYPE.PRICE:
         return filteredPoints.sort(sortPointsByPrice);
-      case SortType.TIME:
+      case SORT_TYPE.TIME:
         return filteredPoints.sort(sortPointsByTime);
     }
 
@@ -87,6 +86,7 @@ export default class BoardPresenter {
       this.#handleViewAction,
       this.#handleModeChange,
       this.#pointModel,
+      this.#totalPrice
     );
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
@@ -107,9 +107,9 @@ export default class BoardPresenter {
   };
 
   #renderSort () {
-    for (const elem in SortType) {
+    for (const elem in SORT_TYPE) {
       this.#sortComponent = new SortItemView({
-        sort: SortType[elem],
+        sort: SORT_TYPE[elem],
         onSortTypeChange: this.#handleSortTypeChange
       });
       render(this.#sortComponent, this.#sortFormView.element);
@@ -135,7 +135,7 @@ export default class BoardPresenter {
     this.#pointPresenters.clear();
 
     if (resetSortType) {
-      this.#currentSortType = SortType.DATE;
+      this.#currentSortType = SORT_TYPE.DATE;
     }
 
     remove(this.#loadingComponent);
@@ -154,10 +154,10 @@ export default class BoardPresenter {
     if (pointsCount > 0) {
       render(this.#pointsListView, this.#container);
       const townsArr = [];
-      let totalPrice = 0;
+      this.#totalPrice = 0;
       for (let i = 0; i < this.points.length; i++) {
         townsArr.push(this.points[i].destination);
-        totalPrice += this.points[i].basePrice;
+        this.#totalPrice += this.points[i].basePrice;
         this.#renderPoint(this.points[i]);
       }
       const uniqueTowns = Array.from(new Set(townsArr));
@@ -165,7 +165,7 @@ export default class BoardPresenter {
       const secondTown = pointsCount > 3 ? '...' : this.#pointModel.townModel.getTownNameById(uniqueTowns[1]);
       const thirdTown = this.#pointModel.townModel.getTownNameById(uniqueTowns[uniqueTowns.length - 1]);
       if (!this.#mainTrip) {
-        this.#mainTrip = new MainTripView(firstTown, secondTown, thirdTown, totalPrice, this.points[0].dateFrom, this.points[pointsCount - 1].dateTo);
+        this.#mainTrip = new MainTripView(firstTown, secondTown, thirdTown, this.#totalPrice, this.points[0].dateFrom, this.points[pointsCount - 1].dateTo);
         render(this.#mainTrip, this.#tripControls, RenderPosition.BEFOREBEGIN);
       }
     }
@@ -185,7 +185,7 @@ export default class BoardPresenter {
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
     switch (actionType) {
-      case UserAction.UPDATE_POINT:
+      case USER_ACTION.UPDATE_POINT:
         this.#pointPresenters.get(update.id).setSaving();
         try {
           await this.#pointModel.updatePoint(updateType, update);
@@ -193,7 +193,7 @@ export default class BoardPresenter {
           this.#pointPresenters.get(update.id).setAborting();
         }
         break;
-      case UserAction.ADD_POINT:
+      case USER_ACTION.ADD_POINT:
         this.#newPointPresenter.setSaving();
         try {
           await this.#pointModel.addPoint(updateType, update);
@@ -201,7 +201,7 @@ export default class BoardPresenter {
           this.#newPointPresenter.setAborting();
         }
         break;
-      case UserAction.DELETE_POINT:
+      case USER_ACTION.DELETE_POINT:
         this.#pointPresenters.get(update.id).setDeleting();
         try {
           await this.#pointModel.deletePoint(updateType, update);
@@ -220,18 +220,18 @@ export default class BoardPresenter {
 
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
-      case UpdateType.MAJOR:
+      case UPDATE_TYPE.MAJOR:
         this.#clearPointsList();
         this.#renderPointsList();
         break;
-      case UpdateType.MINOR:
+      case UPDATE_TYPE.MINOR:
         this.#clearPointsList({resetSortType: true});
         this.#renderPointsList();
         break;
-      case UpdateType.PATCH:
+      case UPDATE_TYPE.PATCH:
         this.#pointPresenters.get(data.id).init(data);
         break;
-      case UpdateType.INIT:
+      case UPDATE_TYPE.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderPointsList();

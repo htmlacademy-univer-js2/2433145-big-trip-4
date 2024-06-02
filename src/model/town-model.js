@@ -1,4 +1,4 @@
-import {UpdateType} from '../const.js';
+import {UPDATE_TYPE} from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class TownModel extends Observable{
@@ -18,7 +18,7 @@ export default class TownModel extends Observable{
     } catch(err) {
       this.#destinations = [];
     }
-    this._notify(UpdateType.INIT);
+    this._notify(UPDATE_TYPE.INIT);
   }
 
   get towns() {
