@@ -54,12 +54,6 @@ export default class BoardPresenter {
     );
   }
 
-  createPoint() {
-    this.#currentSortType = SORT_TYPE.DATE;
-    this.#filterModel.setFilter(UPDATE_TYPE.MAJOR, FILTER_TYPE.EVERYTHING);
-    this.#newPointPresenter.init();
-  }
-
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointModel.points;
@@ -72,6 +66,12 @@ export default class BoardPresenter {
     }
 
     return filteredPoints;
+  }
+
+  createPoint() {
+    this.#currentSortType = SORT_TYPE.DATE;
+    this.#filterModel.setFilter(UPDATE_TYPE.MAJOR, FILTER_TYPE.EVERYTHING);
+    this.#newPointPresenter.init();
   }
 
   init() {
@@ -91,20 +91,6 @@ export default class BoardPresenter {
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
   }
-
-  #handleModeChange = () => {
-    this.#newPointPresenter.destroy();
-    this.#pointPresenters.forEach((presenter) => presenter.resetView());
-  };
-
-  #handleSortTypeChange = (sortType) => {
-    if(this.#currentSortType === sortType) {
-      return;
-    }
-    this.#currentSortType = sortType;
-    this.#clearPointsList({resetSortType: false});
-    this.#renderPointsList();
-  };
 
   #renderSort () {
     for (const elem in SORT_TYPE) {
@@ -174,6 +160,10 @@ export default class BoardPresenter {
     }
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#container, RenderPosition.AFTERBEGIN);
+  }
+
   #renderNoTasks() {
     this.#noPointsComponent = new NoPointsView({
       filterType: this.#filterType
@@ -181,6 +171,20 @@ export default class BoardPresenter {
 
     render(this.#noPointsComponent, this.#container);
   }
+
+  #handleModeChange = () => {
+    this.#newPointPresenter.destroy();
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    if(this.#currentSortType === sortType) {
+      return;
+    }
+    this.#currentSortType = sortType;
+    this.#clearPointsList({resetSortType: false});
+    this.#renderPointsList();
+  };
 
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
@@ -213,10 +217,6 @@ export default class BoardPresenter {
 
     this.#uiBlocker.unblock();
   };
-
-  #renderLoading() {
-    render(this.#loadingComponent, this.#container, RenderPosition.AFTERBEGIN);
-  }
 
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {

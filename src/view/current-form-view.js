@@ -37,6 +37,63 @@ export default class CurrentFormView extends AbstractStatefulView{
     return createCurrentFormTemplate(this._state, this.#pointModel.townModel);
   }
 
+  #setDatepickerFrom() {
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('.event__dateFrom'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+      },
+    );
+  }
+
+  #setDatepickerTo() {
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('.event__dateTo'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        onChange: this.#dateToChangeHandler,
+      },
+    );
+  }
+
+  static parsePointToState(point) {
+    return {...point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false
+    };
+  }
+
+  static parseStateToPoint(state) {
+    const point = {...state};
+    delete point.isDeleting;
+    delete point.isSaving;
+    delete point.isDisabled;
+    return point;
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('form').addEventListener('submit', this.#submitHandler);
+    this.element.querySelector('.event__type-list').addEventListener('change', this.#typeRouteToggleHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
+    this.#setDatepickerFrom();
+    this.#setDatepickerTo();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerTo || this.#datepickerFrom) {
+      this.#datepickerTo.destroy();
+      this.#datepickerFrom.destroy();
+      this.#datepickerTo = null;
+      this.#datepickerFrom = null;
+    }
+  }
+
   #submitHandler = (evt) => {
     evt.preventDefault();
     const tempID = this._state.destination;
@@ -129,61 +186,4 @@ export default class CurrentFormView extends AbstractStatefulView{
     this.updateElement(newData);
     this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
-
-  #setDatepickerFrom() {
-    this.#datepickerFrom = flatpickr(
-      this.element.querySelector('.event__dateFrom'),
-      {
-        dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.dateFrom,
-        onChange: this.#dateFromChangeHandler,
-      },
-    );
-  }
-
-  #setDatepickerTo() {
-    this.#datepickerTo = flatpickr(
-      this.element.querySelector('.event__dateTo'),
-      {
-        dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.dateTo,
-        onChange: this.#dateToChangeHandler,
-      },
-    );
-  }
-
-  static parsePointToState(point) {
-    return {...point,
-      isDisabled: false,
-      isSaving: false,
-      isDeleting: false
-    };
-  }
-
-  static parseStateToPoint(state) {
-    const point = {...state};
-    delete point.isDeleting;
-    delete point.isSaving;
-    delete point.isDisabled;
-    return point;
-  }
-
-  _restoreHandlers() {
-    this.element.querySelector('form').addEventListener('submit', this.#submitHandler);
-    this.element.querySelector('.event__type-list').addEventListener('change', this.#typeRouteToggleHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
-    this.#setDatepickerFrom();
-    this.#setDatepickerTo();
-  }
-
-  removeElement() {
-    super.removeElement();
-
-    if (this.#datepickerTo || this.#datepickerFrom) {
-      this.#datepickerTo.destroy();
-      this.#datepickerFrom.destroy();
-      this.#datepickerTo = null;
-      this.#datepickerFrom = null;
-    }
-  }
 }

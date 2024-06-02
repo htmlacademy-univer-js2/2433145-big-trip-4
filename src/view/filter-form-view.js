@@ -16,12 +16,13 @@ export default class FilterFormView extends AbstractView{
     this.element.addEventListener('change', this.#filterTypeChangeHandler);
   }
 
+  get template() {
+    return createFilterFormTemplate(this.#filters, this.#currentFilter, this.#filterElementsCounts);
+  }
+
   #filterTypeChangeHandler = (evt) => {
     evt.preventDefault();
     this.#handleFilterTypeChange(evt.target.value);
   };
 
-  get template() {
-    return createFilterFormTemplate(this.#filters, this.#currentFilter, this.#filterElementsCounts);
-  }
 }

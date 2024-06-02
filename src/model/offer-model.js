@@ -11,6 +11,10 @@ export default class OfferModel extends Observable{
     this.#pointsApiService = pointsApiService;
   }
 
+  get offers() {
+    return this.#offers;
+  }
+
   async init() {
     try {
       const offers = await this.#pointsApiService.offers;
@@ -19,10 +23,6 @@ export default class OfferModel extends Observable{
       this.#offers = [];
     }
     this._notify(UPDATE_TYPE.INIT);
-  }
-
-  get offers() {
-    return this.#offers;
   }
 
   getOfferByType(offersArr, type) {

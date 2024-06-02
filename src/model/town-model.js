@@ -11,6 +11,10 @@ export default class TownModel extends Observable{
     this.#pointsApiService = pointsApiService;
   }
 
+  get towns() {
+    return this.#destinations;
+  }
+
   async init() {
     try {
       const destinations = await this.#pointsApiService.destinations;
@@ -19,10 +23,6 @@ export default class TownModel extends Observable{
       this.#destinations = [];
     }
     this._notify(UPDATE_TYPE.INIT);
-  }
-
-  get towns() {
-    return this.#destinations;
   }
 
   getTownNameById(id) {

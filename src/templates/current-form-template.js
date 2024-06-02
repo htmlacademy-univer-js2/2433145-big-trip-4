@@ -4,7 +4,7 @@ import he from 'he';
 
 function createCurrentFormTemplate (pointForm, townModelComponent) {
   const townModel = townModelComponent;
-  const offersArr = pointForm.offers.offers;
+  const offers = pointForm.offers.offers;
   pointForm.description = townModel.getTownDescByID(pointForm.destination);
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -54,11 +54,11 @@ function createCurrentFormTemplate (pointForm, townModelComponent) {
       </div>
 
     </header>
-    ${offersArr.length > 0 ? `<section class="event__section  event__section--offers">
+    ${offers.length > 0 ? `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
     <div class="event__available-offers">
-    ${offersArr.map((offer) => `<div class="event__offer-selector">
+    ${offers.map((offer) => `<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title.toLowerCase()}-1" type="checkbox" name="event-offer-${offer.title.toLowerCase()}" ${offer.isChecked ? 'checked' : ''}>
     <label class="event__offer-label" for="event-offer-${offer.title.toLowerCase()}-1">
       <span class="event__offer-title">${offer.title}</span>
