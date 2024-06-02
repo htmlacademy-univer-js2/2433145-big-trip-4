@@ -1,4 +1,4 @@
-import {UpdateType} from '../const.js';
+import {UPDATE_TYPE} from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class TownModel extends Observable{
@@ -11,18 +11,18 @@ export default class TownModel extends Observable{
     this.#pointsApiService = pointsApiService;
   }
 
-  init() {
+  get towns() {
+    return this.#destinations;
+  }
+
+  async init() {
     try {
-      const destinations = this.#pointsApiService.destinations;
+      const destinations = await this.#pointsApiService.destinations;
       this.#destinations = destinations;
     } catch(err) {
       this.#destinations = [];
     }
-    this._notify(UpdateType.INIT);
-  }
-
-  get towns() {
-    return this.#destinations;
+    this._notify(UPDATE_TYPE.INIT);
   }
 
   getTownNameById(id) {
@@ -49,7 +49,7 @@ export default class TownModel extends Observable{
     let temp = '';
     this.#destinations.forEach((town) => {
       if (town.id === id) {
-        temp = town.photos;
+        temp = town.pictures;
       }
     });
     return temp;

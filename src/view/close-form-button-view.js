@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view';
 
 function createCloseFormBtn() {
-  return `<button class="event__rollup-btn" type="button">
+  return `<button class="event__rollup-btn close-form-btn" type="button">
   <span class="visually-hidden">Open event</span>
   </button>`;
 }

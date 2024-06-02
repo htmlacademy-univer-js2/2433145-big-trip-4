@@ -1,13 +1,14 @@
 import {getMonthAndDate, getTime} from '../utils/utils.js';
 
-function createRoutePointTemplate (point) {
-  const offersArr = point.offers;
+function createRoutePointTemplate (point, townModelComponent) {
+  const townModel = townModelComponent;
+  const offersArr = point.offers.offers;
   return `<div class="event">
             <time class="event__date" datetime=${point.dateFrom}>${getMonthAndDate(point.dateFrom)}</time>
             <div class="event__type">
               <img class="event__type-icon" width="42" height="42" src="img/icons/${point.type.toLowerCase()}.png" alt="Event type icon">
             </div>
-            <h3 class="event__title">${point.type} ${point.destination}</h3>
+            <h3 class="event__title">${point.type} ${townModel.getTownNameById(point.destination)}</h3>
             <div class="event__schedule">
               <p class="event__time">
                 <time class="event__start-time" datetime="${point.dateFrom}">${getTime(point.dateFrom)}</time>

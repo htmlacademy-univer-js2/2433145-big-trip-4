@@ -5,8 +5,7 @@ import OpenFormBtnView from '../view/open-form-button-view.js';
 import CloseFormBtnView from '../view/close-form-button-view.js';
 import SaveFormBtnView from '../view/save-form-btn-view.js';
 import {isEscapeButton} from '../utils/utils.js';
-import OfferModel from '../model/offer-model.js';
-import { UserAction, UpdateType } from '../const.js';
+import { USER_ACTION, UPDATE_TYPE } from '../const.js';
 import DeleteBtnView from '../view/delete-btn-view.js';
 
 const Mode = {
@@ -21,17 +20,17 @@ export default class PointPresenter {
   #point = null;
   #mode = Mode.DEFAULT;
   #deleteButton = null;
-
   #pointComponent = null;
   #pointFormComponent = null;
-  #offerModel = new OfferModel('not assigned');
+  #totalPrice = null;
   #pointModel = null;
 
-  constructor ({pointListContainer, onDataChange, onModeChange, pointModel}) {
+  constructor (pointListContainer, onDataChange, onModeChange, pointModel, totalPrice) {
     this.#pointsListView = pointListContainer;
     this.#handlePointChange = onDataChange;
     this.#handleModeChange = onModeChange;
     this.#pointModel = pointModel;
+    this.#totalPrice = totalPrice;
   }
 
   init(point) {
@@ -39,20 +38,21 @@ export default class PointPresenter {
 
     const prevPointComponent = this.#pointComponent;
     const prevFormComponent = this.#pointFormComponent;
-
+    this.#addInfo(this.#point);
     this.#pointComponent = new RoutePointView({
       data: this.#point,
       onFavouriteClick: this.#handleFavouriteClick,
+      pointModel: this.#pointModel
     });
 
     this.#pointFormComponent = new CurrentFormView({
       data: this.#point,
       onSubmit: this.#handleFormSubmit,
       pointModel: this.#pointModel,
-      offerModel: this.#offerModel,
-      resetButtons: this.resetButtons
+      resetButtons: this.resetButtons,
+      totalPrice: this.#totalPrice
     });
-    this.#deleteButton = new DeleteBtnView ();
+    this.#deleteButton = new DeleteBtnView();
 
     if (prevPointComponent === null || prevFormComponent === null) {
       render(this.#pointComponent, this.#pointsListView);
@@ -66,7 +66,8 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointFormComponent, prevFormComponent);
+      replace(this.#pointComponent, prevFormComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevFormComponent);
@@ -80,11 +81,47 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+
       this.#replacePointToForm();
     }
   }
 
-  resetButtons = () => {
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointFormComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointFormComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#pointFormComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointFormComponent.shake(resetFormState);
+  }
+
+  resetButtons = (mode = this.#mode, place = this.#pointFormComponent.element, deleteButton = this.#deleteButton) => {
     const openButton = new OpenFormBtnView({
       onClick: () => {
         this.#replaceFormToPoint();
@@ -97,19 +134,39 @@ export default class PointPresenter {
         document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
       }});
     const saveButton = new SaveFormBtnView();
-    if (this.#mode === Mode.EDITING) {
-      render(saveButton, this.#pointFormComponent.element.querySelector('.event__field-group--price'), RenderPosition.AFTEREND);
+    if (mode === Mode.EDITING) {
+      render(saveButton, place.querySelector('.event__field-group--price'), RenderPosition.AFTEREND);
       render(closeButton, saveButton.element, RenderPosition.AFTEREND);
-      render(this.#deleteButton, saveButton.element, RenderPosition.AFTEREND);
-
+      render(deleteButton, saveButton.element, RenderPosition.AFTEREND);
     }
     else {
       render(openButton, this.#pointComponent.element, RenderPosition.BEFOREEND);
     }
   };
 
+  #addInfo(point) {
+    const checkedOffers = point.offers;
+    this.#point = {
+      ...point,
+      pictures: this.#pointModel.townModel.getPhotosByID(point.destination),
+      destination: point.destination,
+      offers: this.#pointModel.offerModel.getOfferByType(this.#pointModel.offerModel.offers, point.type),
+    };
+    checkedOffers.map((offerID) => {
+      this.#point.offers.offers.forEach((offer) => {
+        if(offer.id === offerID) {
+          offer.isChecked = true;
+        }
+      });
+    });
+  }
+
   #replacePointToForm() {
+    const saveButton = this.#pointFormComponent.element.querySelector('.event__save-btn');
+    const closeButton = this.#pointFormComponent.element.querySelector('.close-form-btn');
     replace(this.#pointComponent, this.#pointFormComponent);
+    saveButton.remove();
+    closeButton.remove();
     this.#mode = Mode.DEFAULT;
   }
 
@@ -121,24 +178,23 @@ export default class PointPresenter {
 
   #handleFavouriteClick = () => {
     this.#handlePointChange(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
+      USER_ACTION.UPDATE_POINT,
+      UPDATE_TYPE.MINOR,
       {...this.#point, isFavorite: !this.#point.isFavorite});
   };
 
   #handleFormSubmit = (update) => {
     this.#handlePointChange(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
+      USER_ACTION.UPDATE_POINT,
+      UPDATE_TYPE.MINOR,
       update
     );
-    this.#replaceFormToPoint();
   };
 
   #handleDeleteClick = (point) => {
     this.#handlePointChange(
-      UserAction.DELETE_POINT,
-      UpdateType.MINOR,
+      USER_ACTION.DELETE_POINT,
+      UPDATE_TYPE.MINOR,
       point
     );
   };

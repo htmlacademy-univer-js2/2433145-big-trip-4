@@ -1,12 +1,11 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilterFormView from '../view/filter-form-view.js';
-import {FilterType, UpdateType} from '../const.js';
+import {FILTER_TYPE, UPDATE_TYPE} from '../const.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #pointModel = null;
-
   #filterComponent = null;
 
   constructor({filterContainer, filterModel, pointModel}) {
@@ -19,17 +18,18 @@ export default class FilterPresenter {
   }
 
   get filters() {
-    return Object.values(FilterType).map((type) => type);
+    return Object.values(FILTER_TYPE).map((type) => type);
   }
 
   init() {
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
-
+    const filterElementsCounts = this.#pointModel.countFilteredPoints();
     this.#filterComponent = new FilterFormView({
       filters,
       currentFilterType: this.#filterModel.filter,
-      onFilterTypeChange: this.#handleFilterTypeChange
+      onFilterTypeChange: this.#handleFilterTypeChange,
+      filterElementsCounts: filterElementsCounts
     });
 
     if (prevFilterComponent === null) {
@@ -49,7 +49,6 @@ export default class FilterPresenter {
     if (this.#filterModel.filter === filterType) {
       return;
     }
-
-    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this.#filterModel.setFilter(UPDATE_TYPE.MAJOR, filterType);
   };
 }
