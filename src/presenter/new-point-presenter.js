@@ -2,7 +2,6 @@ import {remove, render, RenderPosition} from '../framework/render.js';
 import {USER_ACTION, UPDATE_TYPE, DEFAULT_FORM_VALUES} from '../const.js';
 import CurrentFormView from '../view/current-form-view.js';
 import PointPresenter from './point-presenter.js';
-// import CancelBtnView from '../view/cancel-form-button-view.js';
 
 export default class NewPointPresenter extends PointPresenter{
   #pointListContainer = null;
@@ -32,7 +31,6 @@ export default class NewPointPresenter extends PointPresenter{
       onClose: this.#handleCloseClick,
       onDelete: this.#handleDeleteClick,
       pointModel: this.#pointModel,
-      resetButtons: this.resetButtons,
     });
 
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);

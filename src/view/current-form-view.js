@@ -83,7 +83,12 @@ export default class CurrentFormView extends AbstractStatefulView{
     this.element.querySelector('.event__type-list').addEventListener('change', this.#typeRouteToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceToggleHandler);
-
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#closeHandler);
+    const offersArr = this.element.querySelectorAll('.event__offer-selector');
+    for (let i = 0; i < offersArr.length; i++) {
+      offersArr[i].addEventListener('change', this.#offersToggleHandler);
+    }
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
   }
