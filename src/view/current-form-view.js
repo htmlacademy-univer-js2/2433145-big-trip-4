@@ -6,31 +6,34 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 export default class CurrentFormView extends AbstractStatefulView{
   #handleSubmit = null;
-  #resetButtonsHandler = null;
+  #handleClose = null;
+  #handleDelete = null;
   #pointModel = null;
   #datepickerTo = null;
   #datepickerFrom = null;
-  #deleteButton = null;
   #totalPrice = null;
 
-  constructor ({data, onSubmit, pointModel, resetButtons, deleteComponent, totalPrice}) {
+  constructor ({data, onSubmit, onClose, onDelete, pointModel, totalPrice}) {
     super();
     this.#pointModel = pointModel;
     this._setState(CurrentFormView.parsePointToState(data));
     this.#handleSubmit = onSubmit;
+    this.#handleClose = onClose;
+    this.#handleDelete = onDelete;
     this.#totalPrice = totalPrice;
     this.element.querySelector('form').addEventListener('submit', this.#submitHandler);
     this.element.querySelector('.event__type-list').addEventListener('change', this.#typeRouteToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceToggleHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#closeHandler);
+
     const offersArr = this.element.querySelectorAll('.event__offer-selector');
     for (let i = 0; i < offersArr.length; i++) {
       offersArr[i].addEventListener('change', this.#offersToggleHandler);
     }
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
-    this.#resetButtonsHandler = resetButtons;
-    this.#deleteButton = deleteComponent;
   }
 
   get template() {
@@ -79,6 +82,8 @@ export default class CurrentFormView extends AbstractStatefulView{
     this.element.querySelector('form').addEventListener('submit', this.#submitHandler);
     this.element.querySelector('.event__type-list').addEventListener('change', this.#typeRouteToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceToggleHandler);
+
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
   }
@@ -108,9 +113,16 @@ export default class CurrentFormView extends AbstractStatefulView{
       offers: tempOffersIDs
     };
     this.#handleSubmit(CurrentFormView.parseStateToPoint(newData));
-    if ('id' in newData) {
-      this.#resetButtonsHandler();
-    }
+  };
+
+  #deleteHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDelete(CurrentFormView.parseStateToPoint(this._state));
+  };
+
+  #closeHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClose();
   };
 
   #offersToggleHandler = (evt) => {
@@ -136,7 +148,6 @@ export default class CurrentFormView extends AbstractStatefulView{
       }
     };
     this.updateElement(newData);
-    this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
 
   #typeRouteToggleHandler = (evt) => {
@@ -147,14 +158,12 @@ export default class CurrentFormView extends AbstractStatefulView{
       offers: this.#pointModel.offerModel.getOfferByType(this.#pointModel.offerModel.offers, evt.target.value),
       destination: this._state.destination};
     this.updateElement(newData);
-    this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
 
   #priceToggleHandler = (evt) => {
     evt.preventDefault();
     const newData = {... this._state, basePrice: Number(evt.target.value)};
     this.updateElement(newData);
-    this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
 
   #destinationToggleHandler = (evt) => {
@@ -164,7 +173,6 @@ export default class CurrentFormView extends AbstractStatefulView{
       description: this.#pointModel.townModel.getTownDescByID(tempID),
       pictures: this.#pointModel.townModel.getPhotosByID(tempID)};
     this.updateElement(newData);
-    this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
 
   #dateFromChangeHandler = ([userDate]) => {
@@ -174,7 +182,6 @@ export default class CurrentFormView extends AbstractStatefulView{
       this.#pointModel.updatePoint(UPDATE_TYPE.PATCH, newData);
     }
     this.updateElement(newData);
-    this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
 
   #dateToChangeHandler = ([userDate]) => {
@@ -184,6 +191,5 @@ export default class CurrentFormView extends AbstractStatefulView{
       this.#pointModel.updatePoint(UPDATE_TYPE.PATCH, newData);
     }
     this.updateElement(newData);
-    this.#resetButtonsHandler('EDITING', this.element, this.#deleteButton);
   };
 }
