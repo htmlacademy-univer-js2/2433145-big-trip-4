@@ -1,10 +1,14 @@
-import {TYPE_POINTS, DESTINATIONS} from '../const.js';
+import {TYPE_POINTS} from '../const.js';
 import { getFullDate } from '../utils/utils.js';
 import he from 'he';
 
 function createCurrentFormTemplate (pointForm, townModelComponent) {
   const townModel = townModelComponent;
   const offers = pointForm.offers.offers;
+  const destinations = [];
+  townModel.towns.forEach((town) => {
+    destinations.push(town.name);
+  });
   pointForm.description = townModel.getTownDescByID(pointForm.destination);
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -33,7 +37,7 @@ function createCurrentFormTemplate (pointForm, townModelComponent) {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${townModel.getTownNameById(pointForm.destination)}" list="destination-list-1">
         <datalist id="destination-list-1">
-          ${he.encode(DESTINATIONS.map((town) => `<option value="${town}"></option>`).join(''))}
+          ${destinations.map((town) => `<option value="${he.encode(town)}"></option>`).join('')}
         </datalist>
       </div>
 

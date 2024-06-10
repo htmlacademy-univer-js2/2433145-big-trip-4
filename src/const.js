@@ -4,7 +4,6 @@ const OFFERS_COUNT = 5;
 const IMAGE_COUNT = 4;
 
 const TYPE_POINTS = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-const DESTINATIONS = ['Amsterdam', 'Chamonix', 'Magnitogorsk', 'Chicago', 'Los Angeles', 'Moskow', 'Saint-Peterburg', 'Voronezh'];
 
 const FILTER_TYPE = {
   EVERYTHING: 'everything',
@@ -48,4 +47,4 @@ const DEFAULT_FORM_VALUES = {
   dateTo: new Date(2024, 5, 31),
 };
 
-export {POINTS_COUNT, TOWN_COUNTS, OFFERS_COUNT, IMAGE_COUNT, TYPE_POINTS, DESTINATIONS, FILTER_TYPE, SORT_TYPE, USER_ACTION, UPDATE_TYPE, DEFAULT_FORM_VALUES};
+export {POINTS_COUNT, TOWN_COUNTS, OFFERS_COUNT, IMAGE_COUNT, TYPE_POINTS, FILTER_TYPE, SORT_TYPE, USER_ACTION, UPDATE_TYPE, DEFAULT_FORM_VALUES};
