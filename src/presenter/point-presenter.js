@@ -44,7 +44,6 @@ export default class PointPresenter {
       onFavouriteClick: this.#handleFavouriteClick,
       pointModel: this.#pointModel
     });
-
     this.#pointFormComponent = new CurrentFormView({
       data: this.#point,
       onSubmit: this.#handleFormSubmit,
@@ -152,12 +151,13 @@ export default class PointPresenter {
       destination: point.destination,
       offers: this.#pointModel.offerModel.getOfferByType(this.#pointModel.offerModel.offers, point.type),
     };
-    checkedOffers.map((offerID) => {
-      this.#point.offers.offers.forEach((offer) => {
-        if(offer.id === offerID) {
-          offer.isChecked = true;
-        }
-      });
+    this.#point.offers.offers.forEach((offer) => {
+      if(!(checkedOffers.includes(offer.id))){
+        offer.isChecked = false;
+      }
+      else {
+        offer.isChecked = true;
+      }
     });
   }
 
