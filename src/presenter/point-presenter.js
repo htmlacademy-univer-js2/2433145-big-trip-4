@@ -176,11 +176,11 @@ export default class PointPresenter {
     this.#mode = Mode.EDITING;
   }
 
-  #handleFavouriteClick = () => {
+  #handleFavouriteClick = (update) => {
     this.#handlePointChange(
       USER_ACTION.UPDATE_POINT,
       UPDATE_TYPE.MINOR,
-      {...this.#point, isFavorite: !this.#point.isFavorite});
+      update);
   };
 
   #handleFormSubmit = (update) => {

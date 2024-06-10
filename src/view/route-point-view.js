@@ -20,6 +20,11 @@ export default class RoutePointView extends AbstractView{
 
   #clickFavBtnHandler = (evt) => {
     evt.preventDefault();
-    this.#favButtonClick();
+    const newData = {
+      ...this.#point,
+      isFavorite: !this.#point.isFavorite,
+      offers: this.#point.offers.offers
+    };
+    this.#favButtonClick(newData);
   };
 }

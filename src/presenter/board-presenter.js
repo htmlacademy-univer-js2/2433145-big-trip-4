@@ -76,7 +76,6 @@ export default class BoardPresenter {
 
   init() {
     render(this.#sortFormView, this.#container);
-    this.#renderSort();
     this.#renderPointsList();
   }
 
@@ -93,6 +92,9 @@ export default class BoardPresenter {
   }
 
   #renderSort () {
+    if (this.#sortComponent) {
+      return;
+    }
     for (const elem in SORT_TYPE) {
       this.#sortComponent = new SortItemView({
         sort: SORT_TYPE[elem],
@@ -136,6 +138,7 @@ export default class BoardPresenter {
       this.#renderLoading();
       return;
     }
+    this.#renderSort();
     const pointsCount = this.points.length;
     if (pointsCount > 0) {
       render(this.#pointsListView, this.#container);
@@ -178,12 +181,12 @@ export default class BoardPresenter {
   };
 
   #handleSortTypeChange = (sortType) => {
+    this.#clearPointsList({resetSortType: false});
+    this.#renderPointsList();
     if(this.#currentSortType === sortType) {
       return;
     }
     this.#currentSortType = sortType;
-    this.#clearPointsList({resetSortType: false});
-    this.#renderPointsList();
   };
 
   #handleViewAction = async (actionType, updateType, update) => {

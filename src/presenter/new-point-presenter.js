@@ -90,7 +90,7 @@ export default class NewPointPresenter extends PointPresenter{
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (evt.key === 'Escape') {
       evt.preventDefault();
       this.destroy();
     }
