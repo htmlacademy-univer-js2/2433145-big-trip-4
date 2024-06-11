@@ -4,14 +4,17 @@ import { createRoutePointTemplate } from '../templates/route-point-template.js';
 export default class RoutePointView extends AbstractView{
   #point = null;
   #favButtonClick = null;
+  #openClick = null;
   #pointModel = null;
 
-  constructor ({data, onFavouriteClick, pointModel}) {
+  constructor ({data, onFavouriteClick, onOpenClick, pointModel}) {
     super();
     this.#point = data;
     this.#favButtonClick = onFavouriteClick;
+    this.#openClick = onOpenClick;
     this.#pointModel = pointModel;
     this.element.querySelector('.event__favorite-icon').addEventListener('click', this.#clickFavBtnHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#openClickHandler);
   }
 
   get template() {
@@ -20,6 +23,16 @@ export default class RoutePointView extends AbstractView{
 
   #clickFavBtnHandler = (evt) => {
     evt.preventDefault();
-    this.#favButtonClick();
+    const newData = {
+      ...this.#point,
+      isFavorite: !this.#point.isFavorite,
+      offers: this.#point.offers.offers
+    };
+    this.#favButtonClick(newData);
+  };
+
+  #openClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#openClick();
   };
 }
