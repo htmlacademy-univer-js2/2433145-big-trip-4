@@ -73,9 +73,9 @@ export default class PointPresenter {
     remove(this.#pointFormComponent);
   }
 
-  resetView() {
+  resetView(point) {
     if (this.#mode !== Mode.DEFAULT) {
-
+      this.#pointFormComponent.updateElement(CurrentFormView.parsePointToState(point));
       this.#replacePointToForm();
     }
   }
@@ -172,7 +172,8 @@ export default class PointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
   };
 
-  #handleCloseClick = () => {
+  #handleCloseClick = (point) => {
+    this.resetView(point);
     this.#replacePointToForm();
     document.removeEventListener('keydown', this.#escKeyDownButtonHandler);
   };

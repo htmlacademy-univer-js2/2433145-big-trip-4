@@ -12,10 +12,12 @@ export default class CurrentFormView extends AbstractStatefulView{
   #datepickerTo = null;
   #datepickerFrom = null;
   #totalPrice = null;
+  #unsavedChanges = null;
 
   constructor ({data, onSubmit, onClose, onDelete, pointModel, totalPrice}) {
     super();
     this.#pointModel = pointModel;
+    this.#unsavedChanges = data;
     this._setState(CurrentFormView.parsePointToState(data));
     this.#handleSubmit = onSubmit;
     this.#handleClose = onClose;
@@ -127,7 +129,7 @@ export default class CurrentFormView extends AbstractStatefulView{
 
   #closeHandler = (evt) => {
     evt.preventDefault();
-    this.#handleClose();
+    this.#handleClose(this.#unsavedChanges);
   };
 
   #offersToggleHandler = (evt) => {
