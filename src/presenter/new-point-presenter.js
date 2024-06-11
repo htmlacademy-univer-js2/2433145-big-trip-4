@@ -24,6 +24,7 @@ export default class NewPointPresenter extends PointPresenter{
     }
 
     const data = DEFAULT_FORM_VALUES;
+    data.offers = this.#pointModel.offerModel.getOfferByType(this.#pointModel.offerModel.offers, data.type);
 
     this.#pointEditComponent = new CurrentFormView({
       data: data,

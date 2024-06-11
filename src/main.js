@@ -8,7 +8,7 @@ import { RenderPosition, render } from './framework/render.js';
 import PointsApiService from '../src/points-api-service.js';
 import OfferModel from './model/offer-model.js';
 
-const AUTHORIZATION = 'Basic dxcf8yivof4b9v3';
+const AUTHORIZATION = 'Basic dxcf8yivo75869v3';
 const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
 const tripInfoContainer = document.querySelector('.trip-events');

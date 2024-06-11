@@ -34,13 +34,7 @@ const UPDATE_TYPE = {
 const DEFAULT_FORM_VALUES = {
   type: 'flight',
   basePrice: 0,
-  offers: {offers: [
-    {id: '60f8e796-c719-4bba-a845-507fc2c20e6d', title: 'Choose meal', price: 140},
-    {id: '98dfafcf-5613-45f1-867a-7045c4292e8e', title: 'Choose seats', price: 173},
-    {id: 'c0a49d06-b873-4847-b170-7c2a002dc668', title: 'Upgrade to comfort class', price: 159},
-    {id: 'a850395c-a7d6-4f9c-8cb2-7ef48b5a5fef', title: 'Upgrade to business class', price: 179},
-    {id: 'b837a4c4-5559-4751-a18d-2bb09f8c6ec9', title: 'Add luggage', price: 52},
-    {id: 'b57ad935-0c5b-45d4-b76a-4870b6ac208c', title: 'Business lounge', price: 166}]},
+  offers: {offers: []},
   pictures: [],
   isFavorite: true,
   dateFrom: new Date(2024, 5, 30),
